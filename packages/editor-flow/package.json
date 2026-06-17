@@ -1,0 +1,17 @@
+{
+  "name": "@jibo-studio/editor-flow",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.tsx",
+  "exports": { ".": "./src/index.tsx" },
+  "dependencies": {
+    "@jibo-studio/skill-model": "*",
+    "@xyflow/react": "^12.3.0",
+    "uuid": "^10.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
+  }
+}

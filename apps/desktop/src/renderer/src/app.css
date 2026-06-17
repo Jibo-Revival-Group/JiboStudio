@@ -1,0 +1,30 @@
+.app.css .tutorial-banner {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--js-bg-sidebar);
+  border: 1px solid var(--js-accent);
+  padding: 10px 16px;
+  border-radius: 6px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 4px 20px var(--js-shadow);
+}
+
+.tutorial-banner button {
+  padding: 4px 12px;
+  background: var(--js-accent);
+  border: none;
+  color: var(--js-status-bar-text);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.tutorial-banner button:last-child {
+  background: transparent;
+  border: 1px solid var(--js-border);
+  color: var(--js-text);
+}

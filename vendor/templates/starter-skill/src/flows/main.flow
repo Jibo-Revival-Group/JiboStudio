@@ -1,0 +1,42 @@
+{
+    "class": "go.GraphLinksModel",
+    "dataFormat": "flow-1",
+    "nodeKeyProperty": "id",
+    "nodeCategoryProperty": "class",
+    "linkFromPortIdProperty": "fromPort",
+    "linkToPortIdProperty": "toPort",
+    "nodeDataArray": [
+        {
+            "class": "Flow.Begin",
+            "clazz": "Flow.Begin",
+            "loc": "200 80",
+            "id": "begin-1",
+            "options": { "inputParameters": ["()=>{ return {}; }"] },
+            "name": "Begin"
+        },
+        {
+            "class": "Flow.Subflow",
+            "clazz": "Flow.Subflow",
+            "loc": "200 200",
+            "id": "subflow-1",
+            "options": {
+                "subflowId": "./sayHello",
+                "inputParameters": ["() => { return { notepad: notepad }; }"],
+                "getTransition": ["(r) => { return r.transition; }"]
+            },
+            "name": "sayHello"
+        },
+        {
+            "class": "Flow.End",
+            "clazz": "Flow.End",
+            "loc": "200 320",
+            "id": "end-1",
+            "options": { "getTransition": ["() => { return ; }"] },
+            "name": ""
+        }
+    ],
+    "linkDataArray": [
+        { "from": "begin-1", "to": "subflow-1", "fromPort": "", "toPort": "" },
+        { "from": "subflow-1", "to": "end-1", "fromPort": "", "toPort": "" }
+    ]
+}

@@ -1,0 +1,152 @@
+.wizard-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--js-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.wizard {
+  width: 520px;
+  max-width: 90vw;
+  background: var(--js-bg-sidebar);
+  border: 1px solid var(--js-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px var(--js-shadow);
+}
+
+.wizard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--js-border);
+}
+
+.wizard__header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.wizard__close {
+  background: transparent;
+  border: none;
+  color: var(--js-text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.wizard__steps {
+  display: flex;
+  gap: 16px;
+  padding: 12px 20px;
+  background: var(--js-bg);
+  font-size: 12px;
+  color: var(--js-text-muted);
+}
+
+.wizard__steps .active {
+  color: var(--js-accent);
+}
+
+.wizard__body {
+  padding: 20px;
+}
+
+.wizard__body label {
+  display: block;
+  margin-bottom: 16px;
+  color: var(--js-text-muted);
+  font-size: 12px;
+}
+
+.wizard__body input {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px 10px;
+  background: var(--js-bg-input);
+  border: 1px solid var(--js-border);
+  color: var(--js-text);
+  border-radius: 4px;
+}
+
+.wizard__body small {
+  display: block;
+  margin-top: 4px;
+  color: var(--js-text-muted);
+}
+
+.wizard__folder {
+  display: flex;
+  gap: 8px;
+}
+
+.wizard__folder button {
+  padding: 8px 12px;
+  background: var(--js-accent);
+  border: none;
+  color: var(--js-status-bar-text);
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.wizard__preview {
+  font-size: 12px;
+  color: var(--js-text-muted);
+}
+
+.wizard__preview code {
+  color: var(--js-success);
+}
+
+.wizard__summary ul {
+  padding-left: 20px;
+  font-size: 13px;
+}
+
+.wizard__error {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(241, 76, 76, 0.15);
+  border: 1px solid var(--js-error);
+  color: var(--js-error);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.wizard__footer {
+  display: flex;
+  padding: 16px 20px;
+  border-top: 1px solid var(--js-border);
+  gap: 8px;
+}
+
+.wizard__footer-spacer {
+  flex: 1;
+}
+
+.wizard__footer button {
+  padding: 8px 20px;
+  background: var(--js-accent);
+  border: none;
+  color: var(--js-status-bar-text);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.wizard__footer button:first-child {
+  background: var(--js-bg-elevated);
+  border: 1px solid var(--js-border);
+}
+
+.wizard__footer button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

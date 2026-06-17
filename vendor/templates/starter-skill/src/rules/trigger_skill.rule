@@ -1,0 +1,11 @@
+# Allow phrases like "say hello", "play a bloop", "say goodbye"
+TopRule = $* (
+    ( (say $hello){action='sayHello'} ) |
+    ( ($play (*a) $sound{sound=sound._item}){action='playSound'} ) |
+    ( (say $goodbye){action='sayGoodbye'} )
+) $*;
+
+sound @= ($w){_item=_parsed};
+play = (play | make);
+hello = (hello | hi);
+goodbye = (good bye) | goodbye | bye;

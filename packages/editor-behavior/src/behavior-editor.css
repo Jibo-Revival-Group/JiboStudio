@@ -1,0 +1,103 @@
+.behavior-editor {
+  display: flex;
+  height: 100%;
+  font-size: 12px;
+}
+
+.behavior-editor__tree {
+  width: 280px;
+  background: var(--js-bg-sidebar);
+  border-right: 1px solid var(--js-border);
+  padding: 12px;
+  overflow: auto;
+}
+
+.behavior-editor__tree h4,
+.behavior-editor__props h4 {
+  margin: 0 0 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--js-text-muted);
+}
+
+.bt-tree-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 4px 8px;
+  margin: 2px 0;
+  background: transparent;
+  border: none;
+  color: var(--js-text);
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.bt-tree-item:hover,
+.bt-tree-item.selected {
+  background: var(--js-bg-hover);
+}
+
+.bt-tree-item__class {
+  color: var(--js-accent);
+  margin-right: 6px;
+}
+
+.bt-tree-item__name {
+  color: var(--js-text-muted);
+}
+
+.behavior-editor__add {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--js-border);
+}
+
+.behavior-editor__add span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--js-text-muted);
+}
+
+.behavior-editor__add button {
+  display: block;
+  width: 100%;
+  margin-bottom: 4px;
+  padding: 4px 8px;
+  background: var(--js-bg-elevated);
+  border: 1px solid var(--js-border);
+  color: var(--js-text);
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.behavior-editor__props {
+  flex: 1;
+  padding: 12px;
+  overflow: auto;
+  background: var(--js-bg);
+}
+
+.behavior-editor__props label {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--js-text-muted);
+}
+
+.behavior-editor__props input,
+.behavior-editor__props textarea {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 6px 8px;
+  background: var(--js-bg-input);
+  border: 1px solid var(--js-border);
+  color: var(--js-text);
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.behavior-editor__hint {
+  color: var(--js-text-muted);
+}

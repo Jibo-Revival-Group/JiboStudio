@@ -1,0 +1,57 @@
+.tutorial {
+  padding: 12px;
+  font-size: 13px;
+}
+
+.tutorial h3 {
+  margin: 0 0 8px;
+  color: var(--js-accent);
+}
+
+.tutorial__intro {
+  color: var(--js-text-muted);
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.tutorial__steps {
+  padding-left: 20px;
+  margin: 0 0 16px;
+}
+
+.tutorial__steps li {
+  margin-bottom: 12px;
+}
+
+.tutorial__steps strong {
+  display: block;
+  color: var(--js-text);
+}
+
+.tutorial__steps span {
+  display: block;
+  color: var(--js-text-muted);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.tutorial__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tutorial__actions button {
+  padding: 8px;
+  background: var(--js-accent);
+  border: none;
+  color: var(--js-status-bar-text);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tutorial__dismiss {
+  background: var(--js-bg-elevated) !important;
+  border: 1px solid var(--js-border) !important;
+  color: var(--js-text) !important;
+}

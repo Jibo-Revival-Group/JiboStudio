@@ -1,0 +1,28 @@
+@import '../../../../../packages/ui-shell/src/theme.css';
+@import 'material-symbols/outlined.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: var(--js-bg, #121212);
+  color: var(--js-text, #c5c5c5);
+}
+
+button {
+  font-family: inherit;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}

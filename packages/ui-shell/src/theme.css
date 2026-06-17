@@ -1,0 +1,23 @@
+:root {
+  --js-bg: #121212;
+  --js-bg-sidebar: #181818;
+  --js-bg-activity: #141414;
+  --js-bg-titlebar: #1a1a1a;
+  --js-bg-elevated: #1e1e1e;
+  --js-bg-hover: #252525;
+  --js-bg-input: #0f0f0f;
+  --js-border: #2a2a2a;
+  --js-text: #c5c5c5;
+  --js-text-muted: #707070;
+  --js-text-bright: #e8e8e8;
+  --js-accent: #007acc;
+  --js-accent-hover: #1a8ad4;
+  --js-status-bar: #006bb3;
+  --js-status-bar-text: #ffffff;
+  --js-error: #f14c4c;
+  --js-success: #89d185;
+  --js-warning: #cca700;
+  --js-brand: #0ad1f0;
+  --js-overlay: rgba(0, 0, 0, 0.75);
+  --js-shadow: rgba(0, 0, 0, 0.6);
+}

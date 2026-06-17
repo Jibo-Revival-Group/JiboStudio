@@ -1,0 +1,70 @@
+.flow-editor {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.flow-editor__palette {
+  width: 180px;
+  background: var(--js-bg-sidebar);
+  border-right: 1px solid var(--js-border);
+  padding: 8px;
+  overflow-y: auto;
+}
+
+.flow-editor__palette h4 {
+  margin: 0 0 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--js-text-muted);
+}
+
+.flow-editor__palette-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  background: var(--js-bg-elevated);
+  border: 1px solid var(--js-border);
+  color: var(--js-text);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.flow-editor__palette-btn:hover:not(:disabled) {
+  background: var(--js-bg-hover);
+  border-color: var(--js-accent);
+}
+
+.flow-editor__palette-cat {
+  display: block;
+  font-size: 10px;
+  color: var(--js-text-muted);
+}
+
+.flow-editor__canvas {
+  flex: 1;
+  min-width: 0;
+  background: var(--js-bg);
+}
+
+.flow-node {
+  background: var(--js-bg-elevated);
+  border: 1px solid var(--js-accent);
+  border-radius: 6px;
+  padding: 8px 12px;
+  min-width: 120px;
+  font-size: 12px;
+}
+
+.flow-node__class {
+  color: var(--js-accent);
+  font-size: 10px;
+  margin-bottom: 4px;
+}
+
+.flow-node__label {
+  color: var(--js-text);
+}

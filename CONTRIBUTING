@@ -1,0 +1,6 @@
+# THIS IS IMPORTANT!!!!!
+In order to properly run the SDK and have everything work, you must have access to pvindex. If you do not have the permission/ability to access pvindex, you will not be able to run this repository.
+
+If you DO have access to pvindex, you must run "npm run vendor" before making an executable as the repository does not come with the vendor files.
+
+If you are simply running the appimage, you'll be fine. The vendor files have already been added.

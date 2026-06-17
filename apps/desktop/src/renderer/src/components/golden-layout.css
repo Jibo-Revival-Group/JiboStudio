@@ -1,0 +1,119 @@
+@import 'golden-layout/dist/css/goldenlayout-base.css';
+@import 'golden-layout/dist/css/themes/goldenlayout-borderless-dark-theme.css';
+
+.golden-layout-host {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.golden-layout-host .lm_goldenlayout {
+  background: var(--js-bg);
+}
+
+.golden-layout-host .lm_content {
+  background: var(--js-bg);
+}
+
+.golden-layout-host .lm_splitter {
+  background: var(--js-border);
+}
+
+.golden-layout-host .lm_splitter:hover,
+.golden-layout-host .lm_splitter.lm_dragging {
+  background: var(--js-text-muted);
+}
+
+.golden-layout-host .lm_header {
+  background: var(--js-bg-sidebar);
+  border-bottom: 1px solid var(--js-border);
+}
+
+.golden-layout-host .lm_header .lm_tab {
+  color: var(--js-text-muted);
+  background: var(--js-bg-elevated);
+  border: 1px solid var(--js-border);
+  border-bottom: none;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 4px 22px 4px 10px;
+  margin-right: 1px;
+}
+
+.golden-layout-host .lm_header .lm_tab.lm_active {
+  color: var(--js-text);
+  background: var(--js-bg);
+  border-top: 1px solid var(--js-accent);
+}
+
+.golden-layout-host .lm_header .lm_tab.lm_active.lm_focused {
+  background: var(--js-bg);
+}
+
+.golden-layout-host .lm_header .lm_tab .lm_close_tab {
+  background-image: none !important;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  opacity: 0.6;
+}
+
+.golden-layout-host .lm_header .lm_tab .lm_close_tab::after {
+  content: '×';
+  display: block;
+  font-size: 14px;
+  line-height: 16px;
+  text-align: center;
+  color: var(--js-text-muted);
+}
+
+.golden-layout-host .lm_header .lm_tab .lm_close_tab:hover {
+  opacity: 1;
+}
+
+.golden-layout-host .lm_header .lm_tab .lm_close_tab:hover::after {
+  color: var(--js-text);
+}
+
+.golden-layout-host .lm_dropTargetIndicator {
+  outline: 1px dashed var(--js-accent);
+}
+
+.golden-layout-host .lm_dropTargetIndicator .lm_inner {
+  background: var(--js-accent);
+  opacity: 0.15;
+}
+
+.golden-layout-host .lm_controls > li {
+  background-image: none !important;
+  opacity: 0.7;
+}
+
+.golden-layout-host .lm_controls > li:hover {
+  opacity: 1;
+}
+
+.golden-layout-host .lm_controls .lm_close {
+  display: none !important;
+}
+
+.golden-layout-host .lm_maximise::after {
+  content: '⛶';
+  font-size: 11px;
+  color: var(--js-text-muted);
+}
+
+.golden-layout-host .lm_popout::after {
+  content: '↗';
+  font-size: 11px;
+  color: var(--js-text-muted);
+}
+
+.golden-layout-editor-panel {
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+}

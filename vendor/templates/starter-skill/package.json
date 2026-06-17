@@ -1,0 +1,28 @@
+{
+  "name": "starter-skill",
+  "version": "0.1.0",
+  "description": "Jibo starter skill template",
+  "main": "index.js",
+  "jibo": {
+    "main": "index.html",
+    "type": "asset-pack",
+    "launchRule": "launch.rule",
+    "prompt": "Do something",
+    "display-name": "template"
+  },
+  "dependencies": {
+    "jibo": "5.8.1",
+    "nedb": ">=1.8.0"
+  },
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "jibo-dev watch",
+    "watch": "jibo-dev watch",
+    "clean": "jibo-dev clean",
+    "build": "jibo-dev build",
+    "build:release": "jibo-dev build --prod"
+  },
+  "devDependencies": {
+    "jibo-dev": "^2.0.0"
+  }
+}

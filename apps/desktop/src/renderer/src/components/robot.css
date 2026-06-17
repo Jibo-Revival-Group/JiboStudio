@@ -1,0 +1,148 @@
+.robot-panel {
+  padding: 12px;
+  font-size: 13px;
+}
+
+.robot-panel h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+.robot-panel h4 {
+  margin: 16px 0 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--js-text-muted);
+}
+
+.robot-panel__hint {
+  color: var(--js-text-muted);
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.robot-panel label {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--js-text-muted);
+  font-size: 12px;
+}
+
+.robot-panel input {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 6px 8px;
+  background: var(--js-bg-input);
+  border: 1px solid var(--js-border);
+  color: var(--js-text);
+  border-radius: 3px;
+}
+
+.robot-panel__btn {
+  width: 100%;
+  padding: 8px;
+  background: var(--js-accent);
+  border: none;
+  color: var(--js-status-bar-text);
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.robot-panel__profile-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.robot-panel__profile {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  padding: 8px;
+  background: var(--js-bg-elevated);
+  border: 1px solid var(--js-border);
+  color: var(--js-text);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.robot-panel__profile.active {
+  border-color: var(--js-accent);
+}
+
+.robot-panel__profile small {
+  display: block;
+  color: var(--js-text-muted);
+  margin-top: 2px;
+}
+
+.robot-panel__delete {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  padding: 0;
+  background: var(--js-bg-elevated);
+  border: 1px solid var(--js-border);
+  color: var(--js-text-muted);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.robot-panel__delete:hover {
+  color: var(--js-text);
+  background: var(--js-bg-hover);
+  border-color: var(--js-error, #e57373);
+}
+
+.robot-panel__active {
+  margin: 12px 0;
+  padding: 8px;
+  background: var(--js-bg-input);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.robot-panel__active span {
+  display: block;
+  color: var(--js-text-muted);
+}
+
+.robot-panel__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.robot-panel__actions button {
+  padding: 8px;
+  background: var(--js-bg-elevated);
+  border: 1px solid var(--js-border);
+  color: var(--js-text);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.robot-panel__actions button:hover:not(:disabled) {
+  background: var(--js-bg-hover);
+}
+
+.robot-panel__actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.robot-panel__status {
+  margin-top: 12px;
+  padding: 8px;
+  background: var(--js-bg-input);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--js-success);
+  word-break: break-all;
+}

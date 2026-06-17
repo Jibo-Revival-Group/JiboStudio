@@ -1,0 +1,103 @@
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  vertical-align: middle;
+}
+
+.material-symbols-outlined--filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+}
+
+.material-symbols-outlined--sm {
+  font-size: 16px;
+}
+
+.material-symbols-outlined--lg {
+  font-size: 24px;
+}
+
+.jibo-icon {
+  display: inline-block;
+  vertical-align: middle;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.jibo-icon--monochrome {
+  background-color: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.icon-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-inline--file {
+  gap: 8px;
+}
+
+.explorer-folder .material-symbols-outlined,
+.explorer-file .material-symbols-outlined,
+.explorer-file .jibo-icon {
+  margin-right: 4px;
+}
+
+.editor-tab__close .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.wizard__close .material-symbols-outlined {
+  font-size: 22px;
+}
+
+.editor-welcome__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.editor-welcome__brand .jibo-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.editor-tab__dirty {
+  color: var(--js-text);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.file-type-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 16px;
+  padding: 0 3px;
+  border-radius: 2px;
+  background: #3178c6;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+}

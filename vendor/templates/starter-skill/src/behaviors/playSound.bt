@@ -1,0 +1,20 @@
+{
+    "1": {
+        "id": 1,
+        "class": "Sequence",
+        "name": "Root",
+        "asset-pack": "core",
+        "children": ["63dc6c83-b9e1-4e01-9685-bb1debd87d95"],
+        "decorators": [],
+        "options": {}
+    },
+    "63dc6c83-b9e1-4e01-9685-bb1debd87d95": {
+        "id": "63dc6c83-b9e1-4e01-9685-bb1debd87d95",
+        "class": "PlayAudio",
+        "name": "Bloop",
+        "asset-pack": "core",
+        "parent": 1,
+        "options": { "audioPath": "FX_Bloop.mp3" }
+    },
+    "meta": { "version": 1 }
+}

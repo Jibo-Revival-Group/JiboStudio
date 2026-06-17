@@ -1,0 +1,14 @@
+{
+  "name": "jibo-studio-toolchain",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Bundled jibo-cli + jibo-sync for robot sync/run/stop",
+  "dependencies": {
+    "jibo-cli": "file:../npm-packages/jibo-cli-3.7.0.tgz"
+  },
+  "overrides": {
+    "jibo-kb": "5.0.0",
+    "jibo-sync": "2.0.0",
+    "skills-service-manager": "6.0.0"
+  }
+}

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+out/
+release/
+*.log
+.DS_Store
+.env
+vendor/node6/
+vendor/npm-cache/_logs/
+vendor/npm-cache/_cacache/
+vendor/skill-deps/node_modules/
+vendor/skill-deps/package-lock.json
+vendor/sdk-toolchain/node_modules/
+apps/desktop/release/

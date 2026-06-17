@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "extends": "../../tsconfig.base.json",
+    "composite": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+  },
+  "include": ["src/renderer/**/*"]
+}

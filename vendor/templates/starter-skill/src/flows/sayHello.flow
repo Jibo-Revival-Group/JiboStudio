@@ -1,0 +1,43 @@
+{
+    "class": "go.GraphLinksModel",
+    "dataFormat": "flow-1",
+    "nodeKeyProperty": "id",
+    "nodeCategoryProperty": "class",
+    "linkFromPortIdProperty": "fromPort",
+    "linkToPortIdProperty": "toPort",
+    "nodeDataArray": [
+        {
+            "class": "Flow.Begin",
+            "clazz": "Flow.Begin",
+            "loc": "399.375 172.5",
+            "id": "7af80138-48a8-4c19-a4f6-5b6f64d9c5e1",
+            "options": {
+                "inputParameters": ["()=>{", "  return {};", "}"]
+            },
+            "name": ""
+        },
+        {
+            "class": "Flow.End",
+            "clazz": "Flow.End",
+            "loc": "404.4076588924476 606.5",
+            "id": "91fb52af-dfcf-41d7-a09b-4cbd5b26d1a3",
+            "options": { "getTransition": ["() => { return ; }"] },
+            "name": ""
+        },
+        {
+            "class": "Mim.Announcement",
+            "clazz": "Mim.Announcement",
+            "loc": "360.875 504",
+            "id": "95839606-fee2-4de7-af21-f5ee3619ea4a",
+            "options": {
+                "mimPath": "mims/announce_hello.mim",
+                "getPromptData": ["() => { return { currentSpeaker: notepad.currentSpeaker }; }"]
+            },
+            "name": "announce_hello"
+        }
+    ],
+    "linkDataArray": [
+        { "from": "7af80138-48a8-4c19-a4f6-5b6f64d9c5e1", "to": "95839606-fee2-4de7-af21-f5ee3619ea4a", "fromPort": "", "toPort": "" },
+        { "from": "95839606-fee2-4de7-af21-f5ee3619ea4a", "to": "91fb52af-dfcf-41d7-a09b-4cbd5b26d1a3", "fromPort": "", "toPort": "" }
+    ]
+}

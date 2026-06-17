@@ -1,0 +1,67 @@
+.api-docs {
+  padding: 12px;
+  font-size: 13px;
+  overflow: auto;
+  height: 100%;
+}
+
+.api-docs h3 {
+  margin: 0 0 12px;
+}
+
+.api-docs__search {
+  width: 100%;
+  padding: 6px 8px;
+  background: var(--js-bg-input);
+  border: 1px solid var(--js-border);
+  color: var(--js-text);
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.api-docs__module {
+  margin-bottom: 8px;
+  background: var(--js-bg-elevated);
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.api-docs__module summary {
+  cursor: pointer;
+  color: var(--js-accent);
+  font-weight: 600;
+}
+
+.api-docs__module p {
+  margin: 8px 0;
+  color: var(--js-text-muted);
+  font-size: 12px;
+}
+
+.api-docs__module ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.api-docs__module li {
+  padding: 6px 0;
+  border-top: 1px solid var(--js-border);
+  font-size: 12px;
+}
+
+.api-docs__module code {
+  display: block;
+  color: var(--js-success);
+  margin-bottom: 4px;
+}
+
+.api-docs__module li span {
+  color: var(--js-text-muted);
+}
+
+.api-docs__footer {
+  margin-top: 16px;
+  font-size: 11px;
+  color: var(--js-text-muted);
+}
