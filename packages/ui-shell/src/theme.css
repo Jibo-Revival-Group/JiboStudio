@@ -1,3 +1,21 @@
+:root {
+  --js-brand: #56c06d;
+  --js-accent: #56c06d;
+  --js-accent-hover: #48a85e;
+  --js-accent-subtle: rgba(86, 192, 109, 0.14);
+  --js-selection: rgba(86, 192, 109, 0.32);
+  --js-status-bar: #56c06d;
+  --js-status-bar-text: #ffffff;
+  --js-radius-sm: 4px;
+  --js-radius-md: 6px;
+  --js-radius-lg: 8px;
+  --js-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28);
+  --js-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --js-font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --js-font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+  --js-transition: 150ms ease;
+}
+
 :root,
 [data-theme='dark'] {
   color-scheme: dark;
@@ -13,26 +31,11 @@
   --js-text: #cccccc;
   --js-text-muted: #858585;
   --js-text-bright: #ffffff;
-  --js-accent: #0078d4;
-  --js-accent-hover: #1a8ad4;
-  --js-accent-subtle: rgba(0, 120, 212, 0.14);
-  --js-selection: rgba(0, 120, 212, 0.32);
-  --js-status-bar: #007acc;
-  --js-status-bar-text: #ffffff;
   --js-error: #f14c4c;
   --js-success: #89d185;
   --js-warning: #cca700;
-  --js-brand: #0ad1f0;
   --js-overlay: rgba(0, 0, 0, 0.72);
   --js-shadow: rgba(0, 0, 0, 0.45);
-  --js-radius-sm: 4px;
-  --js-radius-md: 6px;
-  --js-radius-lg: 8px;
-  --js-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28);
-  --js-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35);
-  --js-font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --js-font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
-  --js-transition: 150ms ease;
 }
 
 [data-theme='deep-dark'] {
@@ -49,26 +52,13 @@
   --js-text: #c5c5c5;
   --js-text-muted: #707070;
   --js-text-bright: #e8e8e8;
-  --js-accent: #007acc;
-  --js-accent-hover: #1a8ad4;
-  --js-accent-subtle: rgba(0, 122, 204, 0.14);
-  --js-selection: rgba(0, 122, 204, 0.32);
-  --js-status-bar: #006bb3;
-  --js-status-bar-text: #ffffff;
   --js-error: #f14c4c;
   --js-success: #89d185;
   --js-warning: #cca700;
-  --js-brand: #0ad1f0;
   --js-overlay: rgba(0, 0, 0, 0.75);
   --js-shadow: rgba(0, 0, 0, 0.6);
-  --js-radius-sm: 4px;
-  --js-radius-md: 6px;
-  --js-radius-lg: 8px;
   --js-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.32);
   --js-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45);
-  --js-font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --js-font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
-  --js-transition: 150ms ease;
 }
 
 [data-theme='light'] {
@@ -85,24 +75,13 @@
   --js-text: #333333;
   --js-text-muted: #6e6e6e;
   --js-text-bright: #000000;
-  --js-accent: #0078d4;
-  --js-accent-hover: #106ebe;
-  --js-accent-subtle: rgba(0, 120, 212, 0.1);
-  --js-selection: rgba(0, 120, 212, 0.18);
-  --js-status-bar: #0078d4;
-  --js-status-bar-text: #ffffff;
   --js-error: #cd3131;
   --js-success: #388a34;
   --js-warning: #bf8803;
-  --js-brand: #0078d4;
   --js-overlay: rgba(0, 0, 0, 0.38);
   --js-shadow: rgba(0, 0, 0, 0.14);
-  --js-radius-sm: 4px;
-  --js-radius-md: 6px;
-  --js-radius-lg: 8px;
+  --js-accent-subtle: rgba(86, 192, 109, 0.12);
+  --js-selection: rgba(86, 192, 109, 0.2);
   --js-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
   --js-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.12);
-  --js-font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --js-font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
-  --js-transition: 150ms ease;
 }

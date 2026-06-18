@@ -1,5 +1,5 @@
 import type { OpenTab } from '../App';
-import { JiboIcon } from './icons';
+import { StudioLogo } from './icons';
 import { GoldenLayoutEditor } from './GoldenLayoutEditor';
 import './editor-area.css';
 
@@ -62,7 +62,7 @@ export function EditorArea({
       {!hasProject ? (
         <div className="editor-welcome">
           <div className="editor-welcome__brand">
-            <JiboIcon size={48} title="Jibo" />
+            <StudioLogo size={72} title="Jibo Studio" />
             <h1>Jibo Studio</h1>
           </div>
           <p>Create on-robot Jibo skills with visual editors for Flow, Behavior, MIM, and Rules.</p>

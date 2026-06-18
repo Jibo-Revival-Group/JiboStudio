@@ -95,7 +95,7 @@
 }
 
 .editor-welcome h1 {
-  color: var(--js-text-bright);
+  color: var(--js-brand);
   margin: 0;
   font-size: 28px;
   font-weight: 600;

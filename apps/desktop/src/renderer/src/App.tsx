@@ -13,7 +13,7 @@ import { ApiDocsPanel } from './components/ApiDocsPanel';
 import { WelcomeTutorial } from './components/WelcomeTutorial';
 import { SettingsPanel } from './components/SettingsPanel';
 import { StatusBar } from './components/StatusBar';
-import { JiboIcon } from './components/icons';
+import { StudioLogo } from './components/icons';
 import './app.css';
 
 export interface OpenTab {
@@ -201,7 +201,7 @@ export function App() {
     <>
       <AppShell
         title={projectPath ? `Jibo Studio — ${projectPath.split('/').pop()}` : 'Jibo Studio'}
-        logo={<JiboIcon size={18} title="Jibo Studio" />}
+        logo={<StudioLogo size={20} title="Jibo Studio" />}
         activityBar={
           <ActivityBar
             active={sidebarView}

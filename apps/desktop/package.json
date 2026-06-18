@@ -7,7 +7,7 @@
     "name": "Zane Vincent",
     "email": "zane@allied.org"
   },
-  "homepage": "https://github.com/jibo-revival-group/jibo-studio",
+  "homepage": "https://github.com/Jibo-Revival-Group/JiboStudio",
   "main": "./out/main/index.js",
   "scripts": {
     "dev": "ELECTRON_DISABLE_SANDBOX=1 electron-vite dev",

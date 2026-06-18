@@ -27,10 +27,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
-  opacity: 0.95;
+  opacity: 1;
 }
 
 .js-titlebar__title {

@@ -34,6 +34,13 @@
   flex-shrink: 0;
 }
 
+.studio-logo {
+  display: inline-block;
+  vertical-align: middle;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .jibo-icon--monochrome {
   background-color: currentColor;
   mask-repeat: no-repeat;
@@ -76,9 +83,9 @@
   margin-bottom: 8px;
 }
 
-.editor-welcome__brand .jibo-icon {
-  width: 56px;
-  height: 56px;
+.editor-welcome__brand .studio-logo {
+  width: 72px;
+  height: 72px;
 }
 
 .editor-tab__dirty {

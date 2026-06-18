@@ -175,7 +175,7 @@ export function FlowEditor({ content, onChange, readOnly }: FlowEditorProps) {
         >
           <Background gap={16} color="#2a2a2a" />
           <Controls />
-          <MiniMap nodeColor="#007acc" maskColor="rgba(0,0,0,0.75)" />
+          <MiniMap nodeColor="#56c06d" maskColor="rgba(0,0,0,0.75)" />
         </ReactFlow>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import jiboSvg from '../assets/jibo.svg';
+import studioLogo from '../assets/logo.svg';
 import './icons.css';
 
 export interface MaterialIconProps {
@@ -63,6 +64,28 @@ export function JiboIcon({ size = 20, className, title, monochrome = false }: Ji
       width={size}
       height={size}
       title={title}
+    />
+  );
+}
+
+export interface StudioLogoProps {
+  size?: number;
+  className?: string;
+  title?: string;
+}
+
+export function StudioLogo({ size = 20, className, title = 'Jibo Studio' }: StudioLogoProps) {
+  return (
+    <img
+      src={studioLogo}
+      alt=""
+      className={`studio-logo${className ? ` ${className}` : ''}`}
+      width={size}
+      height={size}
+      title={title}
+      aria-hidden={title ? undefined : true}
+      role={title ? 'img' : undefined}
+      aria-label={title}
     />
   );
 }
