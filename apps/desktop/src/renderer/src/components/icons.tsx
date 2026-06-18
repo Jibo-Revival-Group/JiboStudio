@@ -76,28 +76,88 @@ export function ExpandIcon({ expanded, size = 16 }: { expanded: boolean; size?: 
     <MaterialIcon
       name={expanded ? 'expand_more' : 'chevron_right'}
       size={size}
-      className="material-symbols-outlined--sm"
+      className="explorer-icon explorer-icon--chevron"
     />
   );
 }
 
+export function FolderIcon({
+  open,
+  size = 16,
+}: {
+  open: boolean;
+  size?: number;
+}) {
+  return (
+    <MaterialIcon
+      name={open ? 'folder_open' : 'folder'}
+      size={size}
+      filled={open}
+      className="explorer-icon explorer-icon--folder"
+    />
+  );
+}
+
+export interface FileIconSpec {
+  icon: string;
+  className: string;
+  filled?: boolean;
+}
+
+export function getFileIconSpec(name: string): FileIconSpec {
+  const lower = name.toLowerCase();
+  if (lower.endsWith('.flow')) {
+    return { icon: 'account_tree', className: 'explorer-icon--flow' };
+  }
+  if (lower.endsWith('.bt')) {
+    return { icon: 'schema', className: 'explorer-icon--behavior' };
+  }
+  if (lower.endsWith('.rule')) {
+    return { icon: 'rule', className: 'explorer-icon--rule' };
+  }
+  if (lower.endsWith('.mim')) {
+    return { icon: 'chat_bubble', className: 'explorer-icon--mim' };
+  }
+  if (lower === 'package.json') {
+    return { icon: 'inventory_2', className: 'explorer-icon--package' };
+  }
+  if (lower.endsWith('.json')) {
+    return { icon: 'data_object', className: 'explorer-icon--json' };
+  }
+  if (lower.endsWith('.ts') || lower.endsWith('.tsx')) {
+    return { icon: 'code_blocks', className: 'explorer-icon--typescript' };
+  }
+  if (lower.endsWith('.js') || lower.endsWith('.jsx')) {
+    return { icon: 'javascript', className: 'explorer-icon--javascript' };
+  }
+  if (lower.endsWith('.html') || lower.endsWith('.htm')) {
+    return { icon: 'html', className: 'explorer-icon--html' };
+  }
+  if (lower.endsWith('.css')) {
+    return { icon: 'css', className: 'explorer-icon--css' };
+  }
+  if (lower.endsWith('.md')) {
+    return { icon: 'markdown', className: 'explorer-icon--markdown' };
+  }
+  if (/\.(png|jpe?g|gif|svg|webp|ico)$/.test(lower)) {
+    return { icon: 'image', className: 'explorer-icon--image' };
+  }
+  if (lower.endsWith('.xml')) {
+    return { icon: 'code', className: 'explorer-icon--xml' };
+  }
+  return { icon: 'description', className: 'explorer-icon--generic' };
+}
+
 export function FileTypeIcon({ name, size = 16 }: { name: string; size?: number }) {
-  if (name.endsWith('.flow')) {
-    return <MaterialIcon name="account_tree" size={size} className="material-symbols-outlined--sm" />;
-  }
-  if (name.endsWith('.bt')) {
-    return <MaterialIcon name="schema" size={size} className="material-symbols-outlined--sm" />;
-  }
-  if (name.endsWith('.rule')) {
-    return <MaterialIcon name="rule" size={size} className="material-symbols-outlined--sm" />;
-  }
-  if (name.endsWith('.mim')) {
-    return <MaterialIcon name="chat_bubble" size={size} className="material-symbols-outlined--sm" />;
-  }
-  if (name.endsWith('.ts')) {
-    return <span className="file-type-badge">TS</span>;
-  }
-  return <MaterialIcon name="description" size={size} className="material-symbols-outlined--sm" />;
+  const spec = getFileIconSpec(name);
+  return (
+    <MaterialIcon
+      name={spec.icon}
+      size={size}
+      filled={spec.filled}
+      className={`explorer-icon ${spec.className}`}
+    />
+  );
 }
 
 export type ActivityIconId = 'folder' | 'jibo' | 'bug_report' | 'menu_book' | 'help';

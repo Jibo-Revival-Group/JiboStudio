@@ -57,7 +57,7 @@
 .explorer-folder .material-symbols-outlined,
 .explorer-file .material-symbols-outlined,
 .explorer-file .jibo-icon {
-  margin-right: 4px;
+  margin-right: 0;
 }
 
 .editor-tab__close .material-symbols-outlined {

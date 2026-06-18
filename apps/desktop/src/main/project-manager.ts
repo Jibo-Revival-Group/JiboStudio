@@ -34,7 +34,10 @@ export function listDirectoryTree(rootPath: string, currentPath = rootPath): Fil
       // Skip entries we cannot read (permissions, broken symlinks, etc.)
     }
   }
-  return result;
+  return result.sort((a, b) => {
+    if (a.type !== b.type) return a.type === 'directory' ? -1 : 1;
+    return a.name.localeCompare(b.name);
+  });
 }
 
 export function readProjectFile(filePath: string): string {

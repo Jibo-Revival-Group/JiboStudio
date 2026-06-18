@@ -187,6 +187,7 @@ export function App() {
           <FileExplorer
             files={files}
             projectPath={projectPath}
+            selectedPath={activeTab}
             onOpenFile={openFile}
             onOpenProject={handleOpenProject}
             onNewSkill={() => setShowWizard(true)}
