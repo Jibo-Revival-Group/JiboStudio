@@ -1,0 +1,30 @@
+.status-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  gap: 0;
+}
+
+.status-bar__segment {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-bar__segment + .status-bar__segment {
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.status-bar__segment--primary {
+  flex: 1;
+  font-weight: 500;
+}
+
+.status-bar__segment--warning {
+  color: #ffe082;
+}

@@ -15,6 +15,6 @@ export const theme = {
   error: '#f14c4c',
   success: '#89d185',
   warning: '#cca700',
-  fontFamily: "'Segoe UI', system-ui, sans-serif",
-  monoFont: "'JetBrains Mono', 'Fira Code', monospace",
+  fontFamily: "var(--js-font-sans)",
+  monoFont: "var(--js-font-mono)",
 } as const;

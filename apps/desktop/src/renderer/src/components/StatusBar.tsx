@@ -1,4 +1,5 @@
 import type { RobotProfile } from '../../../shared/types';
+import './status-bar.css';
 
 interface StatusBarProps {
   message: string;
@@ -9,11 +10,15 @@ interface StatusBarProps {
 
 export function StatusBar({ message, projectPath, robot, dirty }: StatusBarProps) {
   return (
-    <>
-      <span>{message}</span>
-      {dirty && <span>Unsaved changes</span>}
-      {projectPath && <span>{projectPath.split('/').pop()}</span>}
-      {robot && <span>Robot: {robot.host}</span>}
-    </>
+    <div className="status-bar">
+      <span className="status-bar__segment status-bar__segment--primary">{message}</span>
+      {dirty ? (
+        <span className="status-bar__segment status-bar__segment--warning">Unsaved changes</span>
+      ) : null}
+      {projectPath ? (
+        <span className="status-bar__segment">{projectPath.split('/').pop()}</span>
+      ) : null}
+      {robot ? <span className="status-bar__segment">Robot: {robot.host}</span> : null}
+    </div>
   );
 }

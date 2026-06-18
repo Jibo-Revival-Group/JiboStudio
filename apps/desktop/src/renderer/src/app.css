@@ -1,30 +1,50 @@
-.app.css .tutorial-banner {
+.tutorial-banner {
   position: fixed;
-  bottom: 30px;
+  bottom: 34px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--js-bg-sidebar);
-  border: 1px solid var(--js-accent);
-  padding: 10px 16px;
-  border-radius: 6px;
+  background: var(--js-bg-elevated);
+  border: 1px solid var(--js-border);
+  padding: 12px 16px;
+  border-radius: var(--js-radius-lg);
   display: flex;
   gap: 12px;
   align-items: center;
   z-index: 1000;
-  box-shadow: 0 4px 20px var(--js-shadow);
+  box-shadow: var(--js-shadow-md);
+  font-size: 13px;
+  color: var(--js-text);
 }
 
 .tutorial-banner button {
-  padding: 4px 12px;
-  background: var(--js-accent);
-  border: none;
-  color: var(--js-status-bar-text);
-  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 12px;
+  border-radius: var(--js-radius-sm);
   cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid transparent;
 }
 
-.tutorial-banner button:last-child {
+.tutorial-banner button:first-of-type {
+  background: var(--js-accent);
+  border-color: var(--js-accent);
+  color: var(--js-status-bar-text);
+}
+
+.tutorial-banner button:first-of-type:hover {
+  background: var(--js-accent-hover);
+}
+
+.tutorial-banner button:last-of-type {
   background: transparent;
-  border: 1px solid var(--js-border);
+  border-color: var(--js-border);
+  color: var(--js-text-muted);
+}
+
+.tutorial-banner button:last-of-type:hover {
+  background: var(--js-bg-hover);
   color: var(--js-text);
 }

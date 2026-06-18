@@ -27,32 +27,59 @@
   justify-content: center;
   height: 100%;
   text-align: center;
-  padding: 40px;
-  background: var(--js-bg);
+  padding: 48px 40px;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, var(--js-accent-subtle), transparent 70%),
+    var(--js-bg);
   z-index: 1;
 }
 
 .editor-toolbar {
   display: flex;
-  gap: 6px;
-  padding: 4px 8px;
+  gap: 8px;
+  padding: 6px 12px;
   background: var(--js-bg-sidebar);
-  border-bottom: 1px solid var(--js-border);
+  border-bottom: 1px solid var(--js-border-subtle);
   align-items: center;
 }
 
-.editor-toolbar button {
-  padding: 4px 12px;
-  background: var(--js-accent);
-  border: none;
-  color: var(--js-status-bar-text);
-  border-radius: 3px;
+.editor-toolbar__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 14px;
+  border-radius: var(--js-radius-sm);
   cursor: pointer;
   font-size: 12px;
+  font-weight: 500;
+  border: 1px solid transparent;
 }
 
-.editor-toolbar button:disabled {
-  opacity: 0.5;
+.editor-toolbar__btn--primary {
+  background: var(--js-accent);
+  border-color: var(--js-accent);
+  color: var(--js-status-bar-text);
+}
+
+.editor-toolbar__btn--primary:hover:not(:disabled) {
+  background: var(--js-accent-hover);
+  border-color: var(--js-accent-hover);
+}
+
+.editor-toolbar__btn--secondary {
+  background: var(--js-bg-elevated);
+  border-color: var(--js-border);
+  color: var(--js-text);
+}
+
+.editor-toolbar__btn--secondary:hover {
+  background: var(--js-bg-hover);
+  border-color: var(--js-text-muted);
+}
+
+.editor-toolbar__btn:disabled {
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
@@ -63,36 +90,62 @@
   align-items: center;
   justify-content: center;
   color: var(--js-text-muted);
+  font-size: 13px;
   pointer-events: none;
 }
 
 .editor-welcome h1 {
-  color: var(--js-brand);
+  color: var(--js-text-bright);
   margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .editor-welcome p {
   color: var(--js-text-muted);
-  max-width: 480px;
-  margin-bottom: 24px;
+  max-width: 440px;
+  margin: 0 0 28px;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .editor-welcome__actions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
-.editor-welcome__actions button {
-  padding: 10px 24px;
-  background: var(--js-accent);
-  border: none;
-  color: var(--js-status-bar-text);
-  border-radius: 4px;
+.editor-welcome__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 20px;
+  border-radius: var(--js-radius-md);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid transparent;
 }
 
-.editor-welcome__actions button:last-child {
+.editor-welcome__btn--primary {
+  background: var(--js-accent);
+  border-color: var(--js-accent);
+  color: var(--js-status-bar-text);
+  box-shadow: var(--js-shadow-sm);
+}
+
+.editor-welcome__btn--primary:hover {
+  background: var(--js-accent-hover);
+  border-color: var(--js-accent-hover);
+}
+
+.editor-welcome__btn--secondary {
   background: var(--js-bg-elevated);
-  border: 1px solid var(--js-border);
+  border-color: var(--js-border);
+  color: var(--js-text);
+}
+
+.editor-welcome__btn--secondary:hover {
+  background: var(--js-bg-hover);
 }

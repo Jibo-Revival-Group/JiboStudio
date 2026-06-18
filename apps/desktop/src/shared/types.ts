@@ -43,7 +43,7 @@ export interface RobotConnectionStatus {
   ssmUrl?: string;
 }
 
-export type ThemeMode = 'dark' | 'light';
+export type ThemeMode = 'dark' | 'deep-dark' | 'light';
 
 export interface AppSettings {
   version: 1;

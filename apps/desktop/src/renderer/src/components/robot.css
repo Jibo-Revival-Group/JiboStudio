@@ -32,11 +32,11 @@
   display: block;
   width: 100%;
   margin-top: 4px;
-  padding: 6px 8px;
+  padding: 7px 10px;
   background: var(--js-bg-input);
   border: 1px solid var(--js-border);
   color: var(--js-text);
-  border-radius: 3px;
+  border-radius: var(--js-radius-sm);
 }
 
 .robot-panel__btn {
@@ -45,9 +45,11 @@
   background: var(--js-accent);
   border: none;
   color: var(--js-status-bar-text);
-  border-radius: 4px;
+  border-radius: var(--js-radius-sm);
   cursor: pointer;
   margin-bottom: 8px;
+  font-weight: 500;
+  font-size: 12px;
 }
 
 .robot-panel__profile-row {

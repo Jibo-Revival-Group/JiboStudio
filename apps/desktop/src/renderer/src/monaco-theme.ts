@@ -2,12 +2,15 @@ import type { Monaco } from '@monaco-editor/react';
 import type { ThemeMode } from '../../../shared/types';
 
 export const MONACO_THEME_DARK = 'jibo-dark';
+export const MONACO_THEME_DEEP_DARK = 'jibo-deep-dark';
 export const MONACO_THEME_LIGHT = 'jibo-light';
 
 let themesRegistered = false;
 
 export function getMonacoTheme(theme: ThemeMode): string {
-  return theme === 'light' ? MONACO_THEME_LIGHT : MONACO_THEME_DARK;
+  if (theme === 'light') return MONACO_THEME_LIGHT;
+  if (theme === 'deep-dark') return MONACO_THEME_DEEP_DARK;
+  return MONACO_THEME_DARK;
 }
 
 export function setupMonacoTheme(monaco: Monaco): void {
@@ -19,15 +22,32 @@ export function setupMonacoTheme(monaco: Monaco): void {
     inherit: true,
     rules: [],
     colors: {
-      'editor.background': '#121212',
-      'editorGutter.background': '#121212',
-      'editor.lineHighlightBackground': '#1a1a1a',
-      'editorWidget.background': '#181818',
-      'editorWidget.border': '#2a2a2a',
-      'input.background': '#0f0f0f',
-      'dropdown.background': '#181818',
-      'sideBar.background': '#181818',
-      'minimap.background': '#121212',
+      'editor.background': '#1e1e1e',
+      'editorGutter.background': '#1e1e1e',
+      'editor.lineHighlightBackground': '#2a2d2e',
+      'editorWidget.background': '#252526',
+      'editorWidget.border': '#3c3c3c',
+      'input.background': '#3c3c3c',
+      'dropdown.background': '#252526',
+      'sideBar.background': '#252526',
+      'minimap.background': '#1e1e1e',
+    },
+  });
+
+  monaco.editor.defineTheme(MONACO_THEME_DEEP_DARK, {
+    base: 'vs-dark',
+    inherit: true,
+    rules: [],
+    colors: {
+      'editor.background': '#0a0a0a',
+      'editorGutter.background': '#0a0a0a',
+      'editor.lineHighlightBackground': '#141414',
+      'editorWidget.background': '#111111',
+      'editorWidget.border': '#222222',
+      'input.background': '#080808',
+      'dropdown.background': '#111111',
+      'sideBar.background': '#111111',
+      'minimap.background': '#0a0a0a',
     },
   });
 

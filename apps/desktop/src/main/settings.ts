@@ -16,7 +16,7 @@ function normalizeSettings(raw: unknown): AppSettings {
   if (typeof raw !== 'object' || raw === null) return settings;
 
   const record = raw as Record<string, unknown>;
-  if (record.theme === 'light' || record.theme === 'dark') {
+  if (record.theme === 'light' || record.theme === 'dark' || record.theme === 'deep-dark') {
     settings.theme = record.theme;
   }
 

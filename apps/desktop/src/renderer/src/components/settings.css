@@ -7,10 +7,10 @@
 
 .settings__header {
   flex-shrink: 0;
-  padding: 10px 16px 8px;
+  padding: 12px 16px 10px;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--js-text-muted);
 }
@@ -20,7 +20,7 @@
 }
 
 .settings__section + .settings__section {
-  border-top: 1px solid var(--js-border);
+  border-top: 1px solid var(--js-border-subtle);
   padding-top: 16px;
 }
 
@@ -58,27 +58,33 @@
 .settings__option-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .settings__option {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid var(--js-border);
-  border-radius: 6px;
+  border-radius: var(--js-radius-md);
   background: var(--js-bg-elevated);
   cursor: pointer;
+  transition:
+    border-color var(--js-transition),
+    background var(--js-transition),
+    box-shadow var(--js-transition);
 }
 
 .settings__option:hover {
   background: var(--js-bg-hover);
+  border-color: var(--js-text-muted);
 }
 
 .settings__option--selected {
   border-color: var(--js-accent);
-  background: color-mix(in srgb, var(--js-accent) 12%, var(--js-bg-elevated));
+  background: var(--js-accent-subtle);
+  box-shadow: var(--js-shadow-sm);
 }
 
 .settings__option input {
@@ -92,15 +98,16 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--js-radius-md);
   background: var(--js-bg-sidebar);
   color: var(--js-text-muted);
 }
 
 .settings__option--selected .settings__option-icon {
   color: var(--js-accent);
+  background: var(--js-bg);
 }
 
 .settings__option-body {

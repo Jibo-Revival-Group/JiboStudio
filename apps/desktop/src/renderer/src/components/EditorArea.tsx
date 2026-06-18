@@ -34,10 +34,19 @@ export function EditorArea({
     <div className="editor-area">
       {hasProject ? (
         <div className="editor-toolbar">
-          <button type="button" onClick={onSave} disabled={!activeTabData?.dirty}>
+          <button
+            type="button"
+            className="editor-toolbar__btn editor-toolbar__btn--primary"
+            onClick={onSave}
+            disabled={!activeTabData?.dirty}
+          >
             Save
           </button>
-          <button type="button" onClick={onBuild}>
+          <button
+            type="button"
+            className="editor-toolbar__btn editor-toolbar__btn--secondary"
+            onClick={onBuild}
+          >
             Build
           </button>
         </div>
@@ -58,10 +67,10 @@ export function EditorArea({
           </div>
           <p>Create on-robot Jibo skills with visual editors for Flow, Behavior, MIM, and Rules.</p>
           <div className="editor-welcome__actions">
-            <button type="button" onClick={onNewSkill}>
+            <button type="button" className="editor-welcome__btn editor-welcome__btn--primary" onClick={onNewSkill}>
               New Skill
             </button>
-            <button type="button" onClick={onOpenProject}>
+            <button type="button" className="editor-welcome__btn editor-welcome__btn--secondary" onClick={onOpenProject}>
               Open Project
             </button>
           </div>

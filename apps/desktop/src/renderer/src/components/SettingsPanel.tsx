@@ -3,16 +3,24 @@ import type { ThemeMode } from '../../../shared/types';
 import { MaterialIcon } from './icons';
 import './settings.css';
 
-const THEME_OPTIONS: { value: ThemeMode; label: string; description: string }[] = [
-  {
-    value: 'dark',
-    label: 'Dark',
-    description: 'Default dark interface',
-  },
+const THEME_OPTIONS: { value: ThemeMode; label: string; description: string; icon: string }[] = [
   {
     value: 'light',
     label: 'Light',
     description: 'Bright interface for well-lit environments',
+    icon: 'light_mode',
+  },
+  {
+    value: 'dark',
+    label: 'Dark',
+    description: 'Balanced dark gray interface',
+    icon: 'dark_mode',
+  },
+  {
+    value: 'deep-dark',
+    label: 'Deep Dark',
+    description: 'Near-black interface with maximum contrast',
+    icon: 'bedtime',
   },
 ];
 
@@ -47,10 +55,7 @@ export function SettingsPanel() {
                     onChange={() => updateSettings({ theme: option.value })}
                   />
                   <span className="settings__option-icon" aria-hidden>
-                    <MaterialIcon
-                      name={option.value === 'dark' ? 'dark_mode' : 'light_mode'}
-                      size={18}
-                    />
+                    <MaterialIcon name={option.icon} size={18} />
                   </span>
                   <span className="settings__option-body">
                     <span className="settings__option-label">{option.label}</span>

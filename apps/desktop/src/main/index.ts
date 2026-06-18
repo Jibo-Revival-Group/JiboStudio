@@ -2,6 +2,18 @@ import { app, BrowserWindow, shell } from 'electron';
 import { join } from 'path';
 import { registerIpcHandlers, setupWindow } from './ipc';
 import { loadSettings } from './settings';
+import type { ThemeMode } from '../shared/types';
+
+function getWindowBackground(theme: ThemeMode): string {
+  switch (theme) {
+    case 'light':
+      return '#f8f8f8';
+    case 'deep-dark':
+      return '#0a0a0a';
+    default:
+      return '#1e1e1e';
+  }
+}
 
 // Unpackaged Linux installs (npm run dev) often lack a setuid chrome-sandbox.
 if (process.platform === 'linux') {
@@ -16,7 +28,7 @@ function createWindow(): void {
     minWidth: 900,
     minHeight: 600,
     title: 'Jibo Studio',
-    backgroundColor: theme === 'light' ? '#f3f3f3' : '#121212',
+    backgroundColor: getWindowBackground(theme),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
