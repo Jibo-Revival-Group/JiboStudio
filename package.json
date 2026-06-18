@@ -12,6 +12,8 @@
     "dev": "npm run dev -w @jibo-studio/desktop",
     "build": "npm run build -w @jibo-studio/desktop",
     "package:linux": "npm run package:linux -w @jibo-studio/desktop",
+    "package:linux:deb": "npm run package:linux:deb -w @jibo-studio/desktop",
+    "package:linux:all": "npm run package:linux:all -w @jibo-studio/desktop",
     "vendor": "tsx scripts/vendor-from-pvindex.ts",
     "test": "npm run test --workspaces --if-present"
   },

@@ -13,7 +13,9 @@
     "dev": "ELECTRON_DISABLE_SANDBOX=1 electron-vite dev",
     "build": "electron-vite build",
     "preview": "ELECTRON_DISABLE_SANDBOX=1 electron-vite preview",
-    "package:linux": "npm run build && electron-builder --linux"
+    "package:linux": "npm run build && electron-builder --linux AppImage",
+    "package:linux:deb": "npm run build && electron-builder --linux deb",
+    "package:linux:all": "npm run build && electron-builder --linux AppImage deb"
   },
   "dependencies": {
     "@jibo-studio/editor-behavior": "*",
@@ -67,8 +69,7 @@
     ],
     "linux": {
       "target": [
-        "AppImage",
-        "deb"
+        "AppImage"
       ],
       "category": "Development",
       "maintainer": "Zane Vincent <zane@allied.org>",

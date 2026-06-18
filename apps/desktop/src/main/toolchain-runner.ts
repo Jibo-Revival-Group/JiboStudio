@@ -1,7 +1,7 @@
 import { spawn, type ChildProcess } from 'child_process';
 import { existsSync } from 'fs';
 import { join } from 'path';
-import { BrowserWindow } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import type { ToolchainEvent, ToolchainResult } from '../shared/types';
 import {
   runSkillOnRobot,
@@ -21,9 +21,14 @@ function emit(event: ToolchainEvent): void {
   mainWindow?.webContents.send('toolchain:event', event);
 }
 
-function resolveNodeBin(): string {
+const MISSING_BUNDLED_NODE_MSG =
+  'Bundled legacy Node runtime is missing from this install. ' +
+  'Reinstall Jibo Studio from a release built with `npm run vendor`, or run `npm run vendor` when building from source.';
+
+function resolveNodeBin(): string | null {
   const bundled = getNode6Bin();
   if (existsSync(bundled)) return bundled;
+  if (app.isPackaged) return null;
   return 'node';
 }
 
@@ -58,6 +63,11 @@ function runCommand(
 ): Promise<ToolchainResult> {
   return new Promise((resolve) => {
     const nodeBin = resolveNodeBin();
+    if (!nodeBin) {
+      emit({ type: 'stderr', data: `${label}: ${MISSING_BUNDLED_NODE_MSG}\n` });
+      resolve({ success: false, code: 1, output: MISSING_BUNDLED_NODE_MSG });
+      return;
+    }
     const isNpmScript = command === 'npm' || command === 'npx';
     const proc = spawn(isNpmScript ? command : nodeBin, isNpmScript ? args : [command, ...args], {
       cwd,
@@ -120,8 +130,12 @@ export async function buildSkill(projectPath: string): Promise<ToolchainResult> 
 
 export async function watchSkill(projectPath: string): Promise<{ pid: number }> {
   await stopWatch();
+  const nodeBin = resolveNodeBin();
+  if (!nodeBin) {
+    throw new Error(MISSING_BUNDLED_NODE_MSG);
+  }
   const bin = jiboDevBin(projectPath);
-  watchProcess = spawn(resolveNodeBin(), [bin, 'watch'], {
+  watchProcess = spawn(nodeBin, [bin, 'watch'], {
     cwd: projectPath,
     env: buildEnv(projectPath),
   });

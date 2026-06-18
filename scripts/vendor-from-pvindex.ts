@@ -196,17 +196,39 @@ function installCliToolchain() {
   console.log('  sdk-toolchain installed');
 }
 
-function downloadNode6() {
-  ensureDir(NODE6);
+/** Legacy jibo-dev (gulp 3 / graceful-fs) requires Node 7.x; parser-node is built for ABI 51. */
+function installBundledNode() {
+  const NODE_VERSION = '7.10.1';
+  const nodeBin = join(NODE6, 'bin', 'node');
+  if (existsSync(nodeBin)) {
+    console.log(`  bundled Node OK: v${NODE_VERSION}`);
+    return;
+  }
+
+  const tmp = join(VENDOR, '.tmp-node');
+  rmSync(tmp, { recursive: true, force: true });
+  ensureDir(tmp);
+
+  const tarball = `node-v${NODE_VERSION}-linux-x64.tar.xz`;
+  const url = `https://nodejs.org/dist/v${NODE_VERSION}/${tarball}`;
+  console.log(`  downloading Node ${NODE_VERSION} for legacy jibo-dev...`);
+  execSync(`curl -fsSL "${url}" -o "${join(tmp, tarball)}"`, { stdio: 'inherit' });
+  execSync(`tar -xJf "${join(tmp, tarball)}" -C "${tmp}"`, { stdio: 'inherit' });
+
+  const extracted = join(tmp, `node-v${NODE_VERSION}-linux-x64`);
+  cpSync(join(extracted, 'bin'), join(NODE6, 'bin'), { recursive: true });
+  rmSync(tmp, { recursive: true, force: true });
+
   writeFileSync(
     join(NODE6, 'README.md'),
-    `# Bundled Node 6.5
+    `# Bundled Node ${NODE_VERSION}
 
-Optional: place Node 6.5.0 linux-x64 at \`bin/node\` for legacy jibo-dev builds.
-Jibo Studio falls back to system Node when this is absent.
+Shipped with Jibo Studio for legacy jibo-dev skill builds (gulp 3 / graceful-fs).
+The NLU parser native module is built for Node ABI 51 (Node 7.x).
 `,
     'utf8',
   );
+  console.log(`  bundled Node ${NODE_VERSION} at vendor/node6/bin/node`);
 }
 
 function main() {
@@ -233,7 +255,7 @@ function main() {
     process.exitCode = 1;
   }
 
-  downloadNode6();
+  installBundledNode();
   console.log('Vendor complete. Skill deps: vendor/skill-deps/node_modules');
   console.log('Robot sync: vendor/sdk-toolchain/node_modules/jibo-sync');
 }
