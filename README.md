@@ -2,6 +2,11 @@
 
 Desktop IDE for creating on-robot Jibo Electron skills. Visual editors for Flow, Behavior, MIM, and Rules files; bundled legacy SDK toolchain; robot sync and skill debugger.
 
+## Images
+
+![Start Page](readme-assets/start.webp)
+![IDE In use](readme-assets/usage.webp)
+
 ## Requirements
 
 - Linux (v1)
