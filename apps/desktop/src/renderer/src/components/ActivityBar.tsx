@@ -1,7 +1,7 @@
 import type { ActivityIconId } from './icons';
 import { ActivityIcon } from './icons';
 
-type SidebarView = 'explorer' | 'robot' | 'debug' | 'api' | 'tutorial';
+type SidebarView = 'explorer' | 'robot' | 'debug' | 'api' | 'tutorial' | 'settings';
 
 interface ActivityBarProps {
   active: SidebarView;
@@ -15,6 +15,7 @@ const items: { id: SidebarView; icon: ActivityIconId; title: string }[] = [
   { id: 'debug', icon: 'bug_report', title: 'Debugger' },
   { id: 'api', icon: 'menu_book', title: 'API Docs' },
   { id: 'tutorial', icon: 'help', title: 'Tutorial' },
+  { id: 'settings', icon: 'settings', title: 'Settings' },
 ];
 
 export function ActivityBar({ active, onChange }: ActivityBarProps) {

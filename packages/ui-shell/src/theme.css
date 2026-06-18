@@ -1,4 +1,6 @@
-:root {
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
   --js-bg: #121212;
   --js-bg-sidebar: #181818;
   --js-bg-activity: #141414;
@@ -20,4 +22,29 @@
   --js-brand: #0ad1f0;
   --js-overlay: rgba(0, 0, 0, 0.75);
   --js-shadow: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+  --js-bg: #ffffff;
+  --js-bg-sidebar: #f3f3f3;
+  --js-bg-activity: #ececec;
+  --js-bg-titlebar: #e8e8e8;
+  --js-bg-elevated: #ffffff;
+  --js-bg-hover: #e8e8e8;
+  --js-bg-input: #ffffff;
+  --js-border: #d4d4d4;
+  --js-text: #333333;
+  --js-text-muted: #767676;
+  --js-text-bright: #000000;
+  --js-accent: #007acc;
+  --js-accent-hover: #1a8ad4;
+  --js-status-bar: #007acc;
+  --js-status-bar-text: #ffffff;
+  --js-error: #cd3131;
+  --js-success: #388a34;
+  --js-warning: #bf8803;
+  --js-brand: #007acc;
+  --js-overlay: rgba(0, 0, 0, 0.4);
+  --js-shadow: rgba(0, 0, 0, 0.18);
 }

@@ -43,6 +43,18 @@ export interface RobotConnectionStatus {
   ssmUrl?: string;
 }
 
+export type ThemeMode = 'dark' | 'light';
+
+export interface AppSettings {
+  version: 1;
+  theme: ThemeMode;
+}
+
+export const DEFAULT_APP_SETTINGS: AppSettings = {
+  version: 1,
+  theme: 'dark',
+};
+
 export interface JiboStudioAPI {
   openProject: () => Promise<string | null>;
   createProjectFolder: () => Promise<string | null>;
@@ -65,6 +77,8 @@ export interface JiboStudioAPI {
   robotStop: (host: string) => Promise<ToolchainResult>;
   getDebuggerUrl: (host: string) => string;
   getAppVersion: () => Promise<string>;
+  getSettings: () => Promise<AppSettings>;
+  updateSettings: (patch: Partial<AppSettings>) => Promise<AppSettings>;
 }
 
 declare global {

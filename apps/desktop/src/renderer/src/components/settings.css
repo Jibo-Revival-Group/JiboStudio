@@ -1,0 +1,123 @@
+.settings {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  font-size: 13px;
+}
+
+.settings__header {
+  flex-shrink: 0;
+  padding: 10px 16px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--js-text-muted);
+}
+
+.settings__section {
+  padding: 0 12px 16px;
+}
+
+.settings__section + .settings__section {
+  border-top: 1px solid var(--js-border);
+  padding-top: 16px;
+}
+
+.settings__section-title {
+  margin: 0 0 4px;
+  padding: 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--js-text-bright);
+}
+
+.settings__section-desc {
+  margin: 0 0 12px;
+  padding: 0 4px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--js-text-muted);
+}
+
+.settings__fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.settings__label {
+  display: block;
+  margin: 0 0 8px;
+  padding: 0 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--js-text);
+}
+
+.settings__option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settings__option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--js-border);
+  border-radius: 6px;
+  background: var(--js-bg-elevated);
+  cursor: pointer;
+}
+
+.settings__option:hover {
+  background: var(--js-bg-hover);
+}
+
+.settings__option--selected {
+  border-color: var(--js-accent);
+  background: color-mix(in srgb, var(--js-accent) 12%, var(--js-bg-elevated));
+}
+
+.settings__option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.settings__option-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--js-bg-sidebar);
+  color: var(--js-text-muted);
+}
+
+.settings__option--selected .settings__option-icon {
+  color: var(--js-accent);
+}
+
+.settings__option-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.settings__option-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--js-text-bright);
+}
+
+.settings__option-desc {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--js-text-muted);
+}

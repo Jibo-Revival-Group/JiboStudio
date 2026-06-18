@@ -4,14 +4,18 @@ import { BehaviorEditor } from '@jibo-studio/editor-behavior';
 import { MimEditor } from '@jibo-studio/editor-mim';
 import { RulesEditor } from '@jibo-studio/editor-rules';
 import type { OpenTab } from '../App';
-import { MONACO_THEME, setupMonacoTheme } from '../monaco-theme';
+import type { ThemeMode } from '../../../shared/types';
+import { getMonacoTheme, setupMonacoTheme } from '../monaco-theme';
 
 interface TabEditorContentProps {
   tab: OpenTab;
+  theme: ThemeMode;
   onChange: (content: string) => void;
 }
 
-export function TabEditorContent({ tab, onChange }: TabEditorContentProps) {
+export function TabEditorContent({ tab, theme, onChange }: TabEditorContentProps) {
+  const monacoTheme = getMonacoTheme(theme);
+
   switch (tab.editorType) {
     case 'flow':
       return <FlowEditor content={tab.content} onChange={onChange} />;
@@ -25,7 +29,7 @@ export function TabEditorContent({ tab, onChange }: TabEditorContentProps) {
       return (
         <Editor
           height="100%"
-          theme={MONACO_THEME}
+          theme={monacoTheme}
           language={getMonacoLanguage(tab.name)}
           defaultValue={tab.content}
           onChange={(value) => onChange(value ?? '')}

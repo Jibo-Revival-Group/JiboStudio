@@ -25,7 +25,8 @@ import {
   stopOnRobot,
 } from './toolchain-runner';
 import { testRobotConnection } from './robot-connection';
-import type { CreateSkillOptions, RobotProfile } from '../shared/types';
+import { loadSettings, updateSettings } from './settings';
+import type { AppSettings, CreateSkillOptions, RobotProfile } from '../shared/types';
 
 let watcher: chokidar.FSWatcher | null = null;
 
@@ -110,6 +111,10 @@ export function registerIpcHandlers(): void {
   ipcMain.handle('robot:stop', (_e, host: string) => stopOnRobot(host));
 
   ipcMain.handle('app:getVersion', () => app.getVersion());
+
+  ipcMain.handle('settings:get', () => loadSettings());
+
+  ipcMain.handle('settings:update', (_e, patch: Partial<AppSettings>) => updateSettings(patch));
 }
 
 export function setupWindow(win: BrowserWindow): void {

@@ -11,6 +11,7 @@ import { DebuggerPanel } from './components/DebuggerPanel';
 import { NewSkillWizard } from './components/NewSkillWizard';
 import { ApiDocsPanel } from './components/ApiDocsPanel';
 import { WelcomeTutorial } from './components/WelcomeTutorial';
+import { SettingsPanel } from './components/SettingsPanel';
 import { StatusBar } from './components/StatusBar';
 import { JiboIcon } from './components/icons';
 import './app.css';
@@ -24,7 +25,7 @@ export interface OpenTab {
   editorType: ReturnType<typeof getEditorForFile>;
 }
 
-type SidebarView = 'explorer' | 'robot' | 'debug' | 'api' | 'tutorial';
+type SidebarView = 'explorer' | 'robot' | 'debug' | 'api' | 'tutorial' | 'settings';
 
 export function App() {
   const [projectPath, setProjectPath] = useState<string | null>(null);
@@ -180,6 +181,8 @@ export function App() {
             onOpenProject={handleOpenProject}
           />
         );
+      case 'settings':
+        return <SettingsPanel />;
       default:
         return (
           <FileExplorer

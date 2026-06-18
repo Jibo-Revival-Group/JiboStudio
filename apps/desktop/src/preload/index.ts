@@ -35,6 +35,8 @@ const api: JiboStudioAPI = {
     return `http://${normalized}:9191`;
   },
   getAppVersion: () => ipcRenderer.invoke('app:getVersion'),
+  getSettings: () => ipcRenderer.invoke('settings:get'),
+  updateSettings: (patch) => ipcRenderer.invoke('settings:update', patch),
 };
 
 contextBridge.exposeInMainWorld('jiboStudio', api);

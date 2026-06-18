@@ -1,6 +1,7 @@
 import { app, BrowserWindow, shell } from 'electron';
 import { join } from 'path';
 import { registerIpcHandlers, setupWindow } from './ipc';
+import { loadSettings } from './settings';
 
 // Unpackaged Linux installs (npm run dev) often lack a setuid chrome-sandbox.
 if (process.platform === 'linux') {
@@ -8,13 +9,14 @@ if (process.platform === 'linux') {
 }
 
 function createWindow(): void {
+  const { theme } = loadSettings();
   const win = new BrowserWindow({
     width: 1400,
     height: 900,
     minWidth: 900,
     minHeight: 600,
     title: 'Jibo Studio',
-    backgroundColor: '#121212',
+    backgroundColor: theme === 'light' ? '#f3f3f3' : '#121212',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,

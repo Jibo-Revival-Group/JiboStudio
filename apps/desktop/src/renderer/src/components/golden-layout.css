@@ -1,5 +1,4 @@
 @import 'golden-layout/dist/css/goldenlayout-base.css';
-@import 'golden-layout/dist/css/themes/goldenlayout-borderless-dark-theme.css';
 
 .golden-layout-host {
   flex: 1;

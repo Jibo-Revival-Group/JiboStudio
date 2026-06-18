@@ -9,6 +9,7 @@ import {
 } from 'golden-layout';
 import type { OpenTab } from '../App';
 import { TabEditorContent } from './TabEditorContent';
+import { useSettings } from '../context/SettingsContext';
 import './golden-layout.css';
 
 const EDITOR_COMPONENT = 'file-editor';
@@ -115,10 +116,13 @@ export function GoldenLayoutEditor({
   const syncedTitlesRef = useRef('');
   const syncedActiveTabRef = useRef<string | null>(null);
   const [layoutReady, setLayoutReady] = useState(false);
+  const { theme } = useSettings();
 
   tabsRef.current = tabs;
   activeTabRef.current = activeTab;
   handlersRef.current = { onSelectTab, onCloseTab, onChangeContent };
+  const themeRef = useRef(theme);
+  themeRef.current = theme;
 
   const unmountAllPanels = () => {
     panelsRef.current.forEach((bound) => bound.root.unmount());
@@ -132,6 +136,7 @@ export function GoldenLayoutEditor({
     bound.root.render(
       <TabEditorContent
         tab={tab}
+        theme={themeRef.current}
         onChange={(content) => handlersRef.current.onChangeContent(tab.path, content)}
       />,
     );
@@ -321,6 +326,13 @@ export function GoldenLayoutEditor({
       activeItem.focus(true);
     }
   }, [activeTab, layoutReady]);
+
+  useEffect(() => {
+    if (!layoutReady) return;
+    panelsRef.current.forEach((_, tabId) => {
+      renderPanel(tabId);
+    });
+  }, [theme, layoutReady]);
 
   return (
     <div className={`golden-layout-host${hidden ? ' golden-layout-host--hidden' : ''}`}>
