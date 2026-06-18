@@ -21,7 +21,7 @@ interface EditorComponentState {
 interface GoldenLayoutEditorProps {
   tabs: OpenTab[];
   activeTab: string | null;
-  onSelectTab: (path: string) => void;
+  onSelectTab: (path: string | null) => void;
   onCloseTab: (path: string) => void;
   onChangeContent: (path: string, content: string) => void;
   hidden?: boolean;
@@ -62,6 +62,10 @@ function collectComponentItems(item: ContentItem): ComponentItem[] {
   return items;
 }
 
+function getLayoutItems(layout: GoldenLayout): ComponentItem[] {
+  return layout.rootItem ? collectComponentItems(layout.rootItem) : [];
+}
+
 function createEmptyLayoutConfig() {
   return {
     root: {
@@ -84,6 +88,14 @@ function createEmptyLayoutConfig() {
   };
 }
 
+function tabIdsSignature(tabs: OpenTab[]): string {
+  return tabs.map((tab) => tab.id).join('\0');
+}
+
+function tabTitlesSignature(tabs: OpenTab[]): string {
+  return tabs.map((tab) => `${tab.id}\0${tab.name}\0${tab.dirty}`).join('\0');
+}
+
 export function GoldenLayoutEditor({
   tabs,
   activeTab,
@@ -99,6 +111,9 @@ export function GoldenLayoutEditor({
   const tabsRef = useRef(tabs);
   const activeTabRef = useRef(activeTab);
   const handlersRef = useRef({ onSelectTab, onCloseTab, onChangeContent });
+  const syncedTabIdsRef = useRef('');
+  const syncedTitlesRef = useRef('');
+  const syncedActiveTabRef = useRef<string | null>(null);
   const [layoutReady, setLayoutReady] = useState(false);
 
   tabsRef.current = tabs;
@@ -122,22 +137,28 @@ export function GoldenLayoutEditor({
     );
   };
 
+  const runWithSuppressedEvents = (fn: () => void) => {
+    suppressEventsRef.current = true;
+    try {
+      fn();
+    } finally {
+      queueMicrotask(() => {
+        suppressEventsRef.current = false;
+      });
+    }
+  };
+
   const addTabToLayout = (layout: GoldenLayout, tab: OpenTab) => {
     const componentState: EditorComponentState = { path: tab.path, tabId: tab.id };
     try {
       layout.newComponent(EDITOR_COMPONENT, componentState, formatTabTitle(tab));
     } catch (error) {
       console.error('Failed to open editor tab in Golden Layout', error);
-      suppressEventsRef.current = true;
-      try {
+      runWithSuppressedEvents(() => {
         unmountAllPanels();
         layout.loadLayout(createEmptyLayoutConfig());
         layout.newComponent(EDITOR_COMPONENT, componentState, formatTabTitle(tab));
-      } finally {
-        queueMicrotask(() => {
-          suppressEventsRef.current = false;
-        });
-      }
+      });
     }
   };
 
@@ -161,7 +182,6 @@ export function GoldenLayoutEditor({
           panelsRef.current.delete(tabId);
         }
 
-        // Golden Layout may reuse DOM nodes; clear before mounting React.
         container.element.replaceChildren();
         const root = createRoot(container.element);
         panelsRef.current.set(tabId, { root, tabId, path });
@@ -191,11 +211,7 @@ export function GoldenLayoutEditor({
       if (suppressEventsRef.current) return;
 
       const path = getPathFromItem(item);
-      if (
-        path &&
-        path !== activeTabRef.current &&
-        tabsRef.current.some((tab) => tab.path === path)
-      ) {
+      if (path && tabsRef.current.some((tab) => tab.path === path)) {
         handlersRef.current.onSelectTab(path);
       }
     });
@@ -204,12 +220,18 @@ export function GoldenLayoutEditor({
       if (suppressEventsRef.current) return;
 
       const target = event.target;
-      if (ContentItem.isComponentItem(target)) {
-        const tabId = getTabIdFromItem(target);
-        const path = getPathFromItem(target);
-        if (tabId && path && tabsRef.current.some((tab) => tab.id === tabId)) {
-          handlersRef.current.onCloseTab(path);
-        }
+      if (!ContentItem.isComponentItem(target)) return;
+
+      const tabId = getTabIdFromItem(target);
+      const path = getPathFromItem(target);
+      if (!tabId || !path) return;
+      if (!tabsRef.current.some((tab) => tab.id === tabId)) return;
+
+      handlersRef.current.onCloseTab(path);
+
+      const remaining = getLayoutItems(layout);
+      if (remaining.length === 0) {
+        handlersRef.current.onSelectTab(null);
       }
     });
 
@@ -219,6 +241,9 @@ export function GoldenLayoutEditor({
     return () => {
       setLayoutReady(false);
       layoutRef.current = null;
+      syncedTabIdsRef.current = '';
+      syncedTitlesRef.current = '';
+      syncedActiveTabRef.current = null;
       unmountAllPanels();
       layout.destroy();
       host.replaceChildren();
@@ -229,53 +254,73 @@ export function GoldenLayoutEditor({
     const layout = layoutRef.current;
     if (!layoutReady || !layout) return;
 
-    const openTabIds = new Set(tabs.map((tab) => tab.id));
-    const openPaths = new Set(tabs.map((tab) => tab.path));
+    const tabIdsSignatureValue = tabIdsSignature(tabs);
+    if (tabIdsSignatureValue !== syncedTabIdsRef.current) {
+      runWithSuppressedEvents(() => {
+        const openTabIds = new Set(tabs.map((tab) => tab.id));
+        const openPaths = new Set(tabs.map((tab) => tab.path));
 
-    suppressEventsRef.current = true;
-    try {
-      let items = layout.rootItem ? collectComponentItems(layout.rootItem) : [];
-      for (const item of items) {
-        const tabId = getTabIdFromItem(item);
-        const path = getPathFromItem(item);
-        const isStale =
-          (tabId && !openTabIds.has(tabId)) || (path && !openPaths.has(path));
-        if (isStale) {
+        const staleItems = getLayoutItems(layout).filter((item) => {
+          const tabId = getTabIdFromItem(item);
+          const path = getPathFromItem(item);
+          return (tabId && !openTabIds.has(tabId)) || (path && !openPaths.has(path));
+        });
+
+        for (const item of staleItems) {
           item.close();
         }
-      }
 
-      items = layout.rootItem ? collectComponentItems(layout.rootItem) : [];
-      const layoutTabIds = new Set(
-        items.map((item) => getTabIdFromItem(item)).filter((tabId): tabId is string => !!tabId),
-      );
+        const layoutTabIds = new Set(
+          getLayoutItems(layout)
+            .map((item) => getTabIdFromItem(item))
+            .filter((tabId): tabId is string => !!tabId),
+        );
 
-      for (const tab of tabs) {
-        if (!layoutTabIds.has(tab.id)) {
-          addTabToLayout(layout, tab);
+        for (const tab of tabs) {
+          if (!layoutTabIds.has(tab.id)) {
+            addTabToLayout(layout, tab);
+          }
         }
-      }
-
-      const updatedItems = layout.rootItem ? collectComponentItems(layout.rootItem) : items;
-      for (const item of updatedItems) {
-        const tabId = getTabIdFromItem(item);
-        if (!tabId) continue;
-        const tab = tabs.find((entry) => entry.id === tabId);
-        if (tab) {
-          item.setTitle(formatTabTitle(tab));
-        }
-      }
-
-      if (activeTab && openPaths.has(activeTab)) {
-        const activeItem = updatedItems.find((item) => getPathFromItem(item) === activeTab);
-        activeItem?.focus();
-      }
-    } finally {
-      queueMicrotask(() => {
-        suppressEventsRef.current = false;
       });
+
+      syncedTabIdsRef.current = tabIdsSignatureValue;
+      syncedTitlesRef.current = '';
     }
-  }, [tabs, activeTab, layoutReady]);
+  }, [tabs, layoutReady]);
+
+  useEffect(() => {
+    const layout = layoutRef.current;
+    if (!layoutReady || !layout) return;
+
+    const titlesSignature = tabTitlesSignature(tabs);
+    if (titlesSignature === syncedTitlesRef.current) return;
+
+    for (const item of getLayoutItems(layout)) {
+      const tabId = getTabIdFromItem(item);
+      if (!tabId) continue;
+      const tab = tabs.find((entry) => entry.id === tabId);
+      if (tab) {
+        item.setTitle(formatTabTitle(tab));
+      }
+    }
+
+    syncedTitlesRef.current = titlesSignature;
+  }, [tabs, layoutReady]);
+
+  useEffect(() => {
+    const layout = layoutRef.current;
+    if (!layoutReady || !layout) return;
+    if (activeTab === syncedActiveTabRef.current) return;
+
+    syncedActiveTabRef.current = activeTab;
+
+    if (!activeTab) return;
+
+    const activeItem = getLayoutItems(layout).find((item) => getPathFromItem(item) === activeTab);
+    if (activeItem) {
+      activeItem.focus(true);
+    }
+  }, [activeTab, layoutReady]);
 
   return (
     <div className={`golden-layout-host${hidden ? ' golden-layout-host--hidden' : ''}`}>

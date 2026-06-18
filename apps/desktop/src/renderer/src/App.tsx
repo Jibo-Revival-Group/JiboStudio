@@ -84,7 +84,12 @@ export function App() {
         dirty: false,
         editorType: getEditorForFile(filePath),
       };
-      setTabs((prev) => [...prev, tab]);
+      setTabs((prev) => {
+        if (prev.some((entry) => entry.path === filePath)) {
+          return prev;
+        }
+        return [...prev, tab];
+      });
       setActiveTab(filePath);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to open file';
@@ -108,14 +113,7 @@ export function App() {
   };
 
   const closeTab = useCallback((path: string) => {
-    setTabs((prev) => {
-      const remaining = prev.filter((t) => t.path !== path);
-      setActiveTab((current) => {
-        if (current !== path) return current;
-        return remaining.length ? remaining[remaining.length - 1].path : null;
-      });
-      return remaining;
-    });
+    setTabs((prev) => prev.filter((t) => t.path !== path));
   }, []);
 
   const runBuild = async () => {

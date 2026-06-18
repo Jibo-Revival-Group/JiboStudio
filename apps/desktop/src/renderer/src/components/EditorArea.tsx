@@ -7,7 +7,7 @@ interface EditorAreaProps {
   tabs: OpenTab[];
   activeTab: string | null;
   activeTabData: OpenTab | null;
-  onSelectTab: (path: string) => void;
+  onSelectTab: (path: string | null) => void;
   onCloseTab: (path: string) => void;
   onChangeContent: (path: string, content: string) => void;
   onSave: () => void;
