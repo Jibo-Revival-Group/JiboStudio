@@ -1,11 +1,21 @@
 /**
  * Maintainer script: populate vendor/ from pvindex archive and npm mirror.
- * End users never run this — they receive pre-vendored assets in releases.
+ * End users normally do not run this — releases and git track pre-vendored assets.
  *
  * Usage: npm run vendor
  */
 
-import { mkdirSync, writeFileSync, existsSync, cpSync, readdirSync, rmSync } from 'fs';
+import {
+  mkdirSync,
+  writeFileSync,
+  existsSync,
+  cpSync,
+  readdirSync,
+  rmSync,
+  unlinkSync,
+  lstatSync,
+  readlinkSync,
+} from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
@@ -14,6 +24,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const VENDOR = join(ROOT, 'vendor');
 const TEMPLATE = join(VENDOR, 'templates', 'starter-skill');
+const TEMPLATE_DSL = join(VENDOR, 'templates', 'starter-skill-dsl');
 const TOOLCHAIN = join(VENDOR, 'sdk-toolchain');
 const SKILL_DEPS = join(VENDOR, 'skill-deps');
 const NPM_CACHE = join(VENDOR, 'npm-cache');
@@ -29,15 +40,28 @@ function ensureDir(p: string) {
   mkdirSync(p, { recursive: true });
 }
 
+function writePortableNpmrc(dir: string, registry: string) {
+  writeFileSync(dir, `registry=${registry}\ncache=../npm-cache\n`, 'utf8');
+}
+
 function cloneGitDep(name: string, repo: string) {
   const dest = join(GIT_DEPS, name);
-  if (existsSync(join(dest, '.git'))) {
-    console.log(`  git dep OK: ${name}`);
+  if (existsSync(join(dest, 'package.json'))) {
+    // Prefer plain tree for offline git tracking (no submodule required).
+    if (existsSync(join(dest, '.git'))) {
+      rmSync(join(dest, '.git'), { recursive: true, force: true });
+      console.log(`  demoted gitlink to plain tree: ${name}`);
+    } else {
+      console.log(`  git dep OK: ${name}`);
+    }
     return;
   }
   ensureDir(GIT_DEPS);
   console.log(`  cloning ${repo}...`);
   execSync(`git clone --depth 1 ${PVINDEX_GITEA}/${repo} ${dest}`, { stdio: 'inherit' });
+  if (existsSync(join(dest, '.git'))) {
+    rmSync(join(dest, '.git'), { recursive: true, force: true });
+  }
 }
 
 function fetchTarballs() {
@@ -94,11 +118,7 @@ function installSkillDeps() {
       2,
     ) + '\n',
   );
-  writeFileSync(
-    join(SKILL_DEPS, '.npmrc'),
-    `registry=https://registry.npmjs.org\ncache=${NPM_CACHE}\n`,
-    'utf8',
-  );
+  writePortableNpmrc(join(SKILL_DEPS, '.npmrc'), 'https://registry.npmjs.org');
 
   execSync('npm install --no-audit --no-fund --ignore-scripts', {
     cwd: SKILL_DEPS,
@@ -170,11 +190,7 @@ function installCliToolchain() {
       2,
     ) + '\n',
   );
-  writeFileSync(
-    join(TOOLCHAIN, '.npmrc'),
-    `registry=${PVINDEX_NPM}\ncache=${NPM_CACHE}\n`,
-    'utf8',
-  );
+  writePortableNpmrc(join(TOOLCHAIN, '.npmrc'), PVINDEX_NPM);
 
   execSync('npm install --no-audit --no-fund --ignore-scripts', {
     cwd: TOOLCHAIN,
@@ -200,7 +216,25 @@ function installCliToolchain() {
 function installBundledNode() {
   const NODE_VERSION = '7.10.1';
   const nodeBin = join(NODE6, 'bin', 'node');
+  const npmLink = join(NODE6, 'bin', 'npm');
+
   if (existsSync(nodeBin)) {
+    // Remove broken npm symlink left by older vendor runs (points at deleted .tmp-node).
+    try {
+      if (existsSync(npmLink) || lstatSync(npmLink).isSymbolicLink()) {
+        const target = readlinkSync(npmLink);
+        if (target.includes('.tmp-node') || !existsSync(npmLink)) {
+          unlinkSync(npmLink);
+          console.log('  removed broken node6/bin/npm symlink');
+        }
+      }
+    } catch {
+      try {
+        unlinkSync(npmLink);
+      } catch {
+        // ignore
+      }
+    }
     console.log(`  bundled Node OK: v${NODE_VERSION}`);
     return;
   }
@@ -216,7 +250,9 @@ function installBundledNode() {
   execSync(`tar -xJf "${join(tmp, tarball)}" -C "${tmp}"`, { stdio: 'inherit' });
 
   const extracted = join(tmp, `node-v${NODE_VERSION}-linux-x64`);
-  cpSync(join(extracted, 'bin'), join(NODE6, 'bin'), { recursive: true });
+  ensureDir(join(NODE6, 'bin'));
+  cpSync(join(extracted, 'bin', 'node'), nodeBin);
+  // Do not copy npm — it is unused (runtime only needs node) and historically became a broken symlink.
   rmSync(tmp, { recursive: true, force: true });
 
   writeFileSync(
@@ -225,6 +261,7 @@ function installBundledNode() {
 
 Shipped with Jibo Studio for legacy jibo-dev skill builds (gulp 3 / graceful-fs).
 The NLU parser native module is built for Node ABI 51 (Node 7.x).
+Only \`bin/node\` is required at runtime.
 `,
     'utf8',
   );
@@ -234,11 +271,19 @@ The NLU parser native module is built for Node ABI 51 (Node 7.x).
 function main() {
   console.log('Jibo Studio vendor script');
   ensureDir(VENDOR);
+  ensureDir(join(VENDOR, '.tmp-node')); // ensure pattern known; cleaned below
+  rmSync(join(VENDOR, '.tmp-node'), { recursive: true, force: true });
+  rmSync(join(VENDOR, '.tmp-parser'), { recursive: true, force: true });
 
   if (!existsSync(join(TEMPLATE, 'package.json'))) {
-    console.warn('starter-skill template missing');
+    console.warn('starter-skill (legacy) template missing');
   } else {
-    console.log('starter-skill template OK');
+    console.log('starter-skill (legacy) template OK');
+  }
+  if (!existsSync(join(TEMPLATE_DSL, 'package.json'))) {
+    console.warn('starter-skill-dsl template missing');
+  } else {
+    console.log('starter-skill-dsl template OK');
   }
 
   try {

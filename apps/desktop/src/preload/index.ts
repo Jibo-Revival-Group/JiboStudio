@@ -14,7 +14,11 @@ const api: JiboStudioAPI = {
     return () => ipcRenderer.removeListener('project:changed', handler);
   },
   getVendorPath: () => ipcRenderer.invoke('vendor:getPath'),
+  getProjectMode: (projectPath) => ipcRenderer.invoke('project:getMode', projectPath),
   createSkill: (options) => ipcRenderer.invoke('skill:create', options),
+  compileSkill: (projectPath) => ipcRenderer.invoke('skill:compile', projectPath),
+  validateSkillSource: (projectPath, filePath, content) =>
+    ipcRenderer.invoke('skill:validate', projectPath, filePath, content),
   toolchainBuild: (projectPath) => ipcRenderer.invoke('toolchain:build', projectPath),
   toolchainWatch: (projectPath) => ipcRenderer.invoke('toolchain:watch', projectPath),
   toolchainStopWatch: () => ipcRenderer.invoke('toolchain:stopWatch'),

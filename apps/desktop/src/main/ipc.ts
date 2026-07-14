@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import chokidar from 'chokidar';
 import { join as pathJoin } from 'path';
-import { getVendorRoot, getTemplatesDir } from './paths';
+import { getTemplateDirForKind, getVendorRoot } from './paths';
 import {
   listDirectoryTree,
   readProjectFile,
@@ -26,6 +26,11 @@ import {
 } from './toolchain-runner';
 import { testRobotConnection } from './robot-connection';
 import { loadSettings, updateSettings } from './settings';
+import {
+  compileProjectToLegacy,
+  getProjectModeInfo,
+  validateSkillFile,
+} from './skill-compiler';
 import type { AppSettings, CreateSkillOptions, RobotProfile } from '../shared/types';
 
 let watcher: chokidar.FSWatcher | null = null;
@@ -57,8 +62,12 @@ export function registerIpcHandlers(): void {
 
   ipcMain.handle('project:watch', (event, rootPath: string) => {
     watcher?.close();
+    const mode = getProjectModeInfo(rootPath).mode;
     watcher = chokidar.watch(rootPath, {
-      ignored: /node_modules|build|vendor/,
+      ignored:
+        mode === 'dsl-v1'
+          ? /(^|[/\\])\..|node_modules|build|vendor|\.jibo-studio|[/\\]src[/\\]flows[/\\]|[/\\]src[/\\]behaviors[/\\]|[/\\]src[/\\]rules[/\\]|[/\\]mims[/\\]|launch\.rule$/
+          : /(^|[/\\])\..|node_modules|build|vendor/,
       ignoreInitial: true,
     });
     watcher.on('all', (ev, path) => {
@@ -66,12 +75,15 @@ export function registerIpcHandlers(): void {
     });
   });
 
+  ipcMain.handle('project:getMode', (_e, projectPath: string) => getProjectModeInfo(projectPath));
+
   ipcMain.handle('vendor:getPath', () => getVendorRoot());
 
   ipcMain.handle('skill:create', async (_e, options: CreateSkillOptions) => {
+    const template = options.template ?? 'dsl';
     const targetDir = pathJoin(options.targetDir, options.name);
-    copyTemplate(getTemplatesDir(), targetDir);
-    customizeSkillProject(targetDir, options);
+    copyTemplate(getTemplateDirForKind(template), targetDir);
+    customizeSkillProject(targetDir, { ...options, template });
     const installResult = installBundledDeps(targetDir);
     if (!installResult.success) {
       return { success: false, code: 1, output: installResult.message };
@@ -85,6 +97,14 @@ export function registerIpcHandlers(): void {
     }
     return buildResult;
   });
+
+  ipcMain.handle('skill:compile', (_e, projectPath: string) => compileProjectToLegacy(projectPath));
+
+  ipcMain.handle(
+    'skill:validate',
+    (_e, projectPath: string, filePath: string, content: string) =>
+      validateSkillFile(projectPath, filePath, content),
+  );
 
   ipcMain.handle('toolchain:build', (_e, projectPath: string) => buildSkill(projectPath));
 

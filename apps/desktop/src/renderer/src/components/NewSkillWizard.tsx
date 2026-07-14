@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { SkillTemplateKind } from '../../../shared/types';
 import { CloseIcon } from './icons';
 import './wizard.css';
 
@@ -12,6 +13,7 @@ export function NewSkillWizard({ onClose, onCreated }: NewSkillWizardProps) {
   const [name, setName] = useState('my-skill');
   const [displayName, setDisplayName] = useState('My Skill');
   const [launchPhrase, setLaunchPhrase] = useState('hey jibo');
+  const [template, setTemplate] = useState<SkillTemplateKind>('dsl');
   const [parentDir, setParentDir] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +36,7 @@ export function NewSkillWizard({ onClose, onCreated }: NewSkillWizardProps) {
         name,
         displayName,
         launchPhrase,
+        template,
       });
       if (result.success) {
         onCreated(`${parentDir}/${name}`);
@@ -77,6 +80,31 @@ export function NewSkillWizard({ onClose, onCreated }: NewSkillWizardProps) {
                 <input value={launchPhrase} onChange={(e) => setLaunchPhrase(e.target.value)} />
                 <small>What users say to launch this skill</small>
               </label>
+              <fieldset className="wizard__template">
+                <legend>Project type</legend>
+                <label className="wizard__radio">
+                  <input
+                    type="radio"
+                    name="template"
+                    checked={template === 'dsl'}
+                    onChange={() => setTemplate('dsl')}
+                  />
+                  <span>
+                    <strong>JiboScript</strong> — Python-like <code>skill.jibo</code> (recommended)
+                  </span>
+                </label>
+                <label className="wizard__radio">
+                  <input
+                    type="radio"
+                    name="template"
+                    checked={template === 'legacy'}
+                    onChange={() => setTemplate('legacy')}
+                  />
+                  <span>
+                    <strong>Legacy</strong> — visual Flow / Behavior / MIM / Rules editors
+                  </span>
+                </label>
+              </fieldset>
             </>
           )}
           {step === 2 && (
@@ -99,12 +127,24 @@ export function NewSkillWizard({ onClose, onCreated }: NewSkillWizardProps) {
             <div className="wizard__summary">
               <h3>Ready to create</h3>
               <ul>
-                <li><strong>Name:</strong> {name}</li>
-                <li><strong>Display:</strong> {displayName}</li>
-                <li><strong>Launch:</strong> "{launchPhrase}"</li>
-                <li><strong>Template:</strong> starter-skill</li>
+                <li>
+                  <strong>Name:</strong> {name}
+                </li>
+                <li>
+                  <strong>Display:</strong> {displayName}
+                </li>
+                <li>
+                  <strong>Launch:</strong> "{launchPhrase}"
+                </li>
+                <li>
+                  <strong>Template:</strong>{' '}
+                  {template === 'dsl' ? 'JiboScript (skill.jibo)' : 'Legacy visual artifacts'}
+                </li>
               </ul>
-              <p>This will copy the starter-skill template, run npm install, and build.</p>
+              <p>
+                This copies the template, installs the bundled offline SDK, compiles JiboScript if
+                needed, and runs jibo-dev build.
+              </p>
             </div>
           )}
           {error && <div className="wizard__error">{error}</div>}

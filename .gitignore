@@ -1,14 +1,18 @@
-node_modules/
+# Workspace / build artifacts
+/node_modules/
+apps/*/node_modules/
+packages/*/node_modules/
 dist/
 out/
 release/
 *.log
 .DS_Store
 .env
-vendor/node6/
+
+# Vendor cache / temp (do track vendor/node6, skill-deps, sdk-toolchain trees)
 vendor/npm-cache/_logs/
 vendor/npm-cache/_cacache/
-vendor/skill-deps/node_modules/
-vendor/skill-deps/package-lock.json
-vendor/sdk-toolchain/node_modules/
+vendor/.tmp-node/
+vendor/.tmp-parser/
+
 apps/desktop/release/

@@ -16,6 +16,14 @@ export function getTemplatesDir(): string {
   return join(getVendorRoot(), 'templates', 'starter-skill');
 }
 
+export function getDslTemplatesDir(): string {
+  return join(getVendorRoot(), 'templates', 'starter-skill-dsl');
+}
+
+export function getTemplateDirForKind(kind: 'dsl' | 'legacy' = 'dsl'): string {
+  return kind === 'legacy' ? getTemplatesDir() : getDslTemplatesDir();
+}
+
 export function getToolchainDir(): string {
   return join(getVendorRoot(), 'sdk-toolchain');
 }

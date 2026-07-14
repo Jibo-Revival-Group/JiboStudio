@@ -24,11 +24,14 @@ export interface ToolchainResult {
   output: string;
 }
 
+export type SkillTemplateKind = 'dsl' | 'legacy';
+
 export interface CreateSkillOptions {
   targetDir: string;
   name: string;
   displayName: string;
   launchPhrase: string;
+  template?: SkillTemplateKind;
 }
 
 export interface RobotConnectionStatus {
@@ -55,6 +58,29 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   theme: 'dark',
 };
 
+export type SkillSourceMode = 'dsl-v1' | 'legacy-artifacts';
+
+export interface ProjectModeInfo {
+  mode: SkillSourceMode;
+  entryFile: string | null;
+  displayName: string | null;
+}
+
+export interface SourceDiagnostic {
+  message: string;
+  severity: 'error' | 'warning' | 'info';
+  startLine: number;
+  startColumn: number;
+  endLine: number;
+  endColumn: number;
+  code?: string;
+}
+
+export interface CompileSkillResult extends ToolchainResult {
+  diagnostics?: SourceDiagnostic[];
+  artifacts?: string[];
+}
+
 export interface JiboStudioAPI {
   openProject: () => Promise<string | null>;
   createProjectFolder: () => Promise<string | null>;
@@ -63,7 +89,10 @@ export interface JiboStudioAPI {
   writeFile: (filePath: string, content: string) => Promise<void>;
   watchProject: (rootPath: string, callback: (event: string, path: string) => void) => () => void;
   getVendorPath: () => Promise<string>;
+  getProjectMode: (projectPath: string) => Promise<ProjectModeInfo>;
   createSkill: (options: CreateSkillOptions) => Promise<ToolchainResult>;
+  compileSkill: (projectPath: string) => Promise<CompileSkillResult>;
+  validateSkillSource: (projectPath: string, filePath: string, content: string) => Promise<SourceDiagnostic[]>;
   toolchainBuild: (projectPath: string) => Promise<ToolchainResult>;
   toolchainWatch: (projectPath: string) => Promise<{ pid: number }>;
   toolchainStopWatch: () => Promise<void>;

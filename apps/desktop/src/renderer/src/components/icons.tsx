@@ -129,6 +129,9 @@ export interface FileIconSpec {
 
 export function getFileIconSpec(name: string): FileIconSpec {
   const lower = name.toLowerCase();
+  if (lower.endsWith('.jibo')) {
+    return { icon: 'code', className: 'explorer-icon--jibo', filled: true };
+  }
   if (lower.endsWith('.flow')) {
     return { icon: 'account_tree', className: 'explorer-icon--flow' };
   }

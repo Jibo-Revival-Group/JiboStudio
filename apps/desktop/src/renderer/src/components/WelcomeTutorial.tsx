@@ -7,11 +7,26 @@ interface WelcomeTutorialProps {
 }
 
 const STEPS = [
-  { title: 'Create a skill', body: 'Use New Skill wizard with the starter-skill template.' },
-  { title: 'Edit visually', body: 'Open .flow, .bt, .mim, and .rule files in visual editors.' },
-  { title: 'Build', body: 'Click Build to compile with bundled jibo-dev toolchain.' },
-  { title: 'Connect robot', body: 'Enter robot IP/hostname in the Robot panel.' },
-  { title: 'Sync & debug', body: 'Sync to robot, run skill, use debugger on port 9191.' },
+  {
+    title: 'Create a JiboScript skill',
+    body: 'New skills default to skill.jibo — a Python-like source language.',
+  },
+  {
+    title: 'Write your skill',
+    body: 'Describe flows, mims, behaviors, and rules in JiboScript. Save compiles to legacy artifacts.',
+  },
+  {
+    title: 'Build for Jibo',
+    body: 'Build runs the compiler then jibo-dev so your skill matches the on-robot format.',
+  },
+  {
+    title: 'Connect a robot',
+    body: 'Add the robot IP in the Robot panel and test the connection.',
+  },
+  {
+    title: 'Sync & debug',
+    body: 'Sync, run, and open the debugger on port 9191. Legacy visual projects still work.',
+  },
 ];
 
 export function WelcomeTutorial({ onDismiss, onNewSkill, onOpenProject }: WelcomeTutorialProps) {
@@ -19,12 +34,15 @@ export function WelcomeTutorial({ onDismiss, onNewSkill, onOpenProject }: Welcom
     <div className="tutorial">
       <h3>Welcome to Jibo Studio</h3>
       <p className="tutorial__intro">
-        Create on-robot Jibo skills without the legacy Atom SDK. All tools are bundled — no pvindex access needed.
+        Author skills in JiboScript. They compile to legacy Flow / Behavior / MIM / Rules so they
+        still run on Jibo. Existing visual projects open as Legacy.
       </p>
       <ol className="tutorial__steps">
         {STEPS.map((step, i) => (
           <li key={step.title}>
-            <strong>{i + 1}. {step.title}</strong>
+            <strong>
+              {i + 1}. {step.title}
+            </strong>
             <span>{step.body}</span>
           </li>
         ))}

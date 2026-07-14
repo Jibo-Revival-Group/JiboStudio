@@ -9,6 +9,7 @@ import {
   syncSkillToRobot,
 } from './robot-toolchain';
 import { getNode6Bin, getNpmCacheDir, getToolchainDir, getVendorRoot } from './paths';
+import { compileProjectToLegacy, getProjectModeInfo } from './skill-compiler';
 
 let watchProcess: ChildProcess | null = null;
 let mainWindow: BrowserWindow | null = null;
@@ -23,7 +24,7 @@ function emit(event: ToolchainEvent): void {
 
 const MISSING_BUNDLED_NODE_MSG =
   'Bundled legacy Node runtime is missing from this install. ' +
-  'Reinstall Jibo Studio from a release built with `npm run vendor`, or run `npm run vendor` when building from source.';
+  'Reinstall Jibo Studio from a release that includes vendor/, or run `npm run vendor` when building from source.';
 
 function resolveNodeBin(): string | null {
   const bundled = getNode6Bin();
@@ -32,7 +33,7 @@ function resolveNodeBin(): string | null {
   return 'node';
 }
 
-function buildEnv(projectPath: string): NodeJS.ProcessEnv {
+function buildEnv(cwd: string): NodeJS.ProcessEnv {
   const toolchainDir = getToolchainDir();
   const npmCache = getNpmCacheDir();
   const nodeBinDir = join(getVendorRoot(), 'node6', 'bin');
@@ -52,6 +53,7 @@ function buildEnv(projectPath: string): NodeJS.ProcessEnv {
     env.NODE_PATH = join(toolchainDir, 'node_modules');
   }
 
+  void cwd;
   return env;
 }
 
@@ -105,6 +107,26 @@ function jiboDevBin(projectPath: string): string {
   return 'jibo-dev';
 }
 
+async function compileIfDsl(projectPath: string): Promise<ToolchainResult | null> {
+  const mode = getProjectModeInfo(projectPath).mode;
+  if (mode !== 'dsl-v1') return null;
+  emit({ type: 'stdout', data: 'Compiling JiboScript → legacy artifacts...\n' });
+  const result = compileProjectToLegacy(projectPath);
+  if (result.diagnostics?.length) {
+    for (const d of result.diagnostics) {
+      const line = `  [${d.severity}] ${d.startLine}:${d.startColumn} ${d.message}\n`;
+      emit({ type: d.severity === 'error' ? 'stderr' : 'stdout', data: line });
+    }
+  }
+  if (!result.success) {
+    emit({ type: 'stderr', data: 'JiboScript compile failed.\n' });
+    emit({ type: 'exit', code: 1 });
+    return result;
+  }
+  emit({ type: 'stdout', data: `${result.output}\n` });
+  return null;
+}
+
 export async function installBundledSkillDeps(projectPath: string): Promise<ToolchainResult> {
   const { installBundledDeps } = await import('./project-manager');
   emit({ type: 'stdout', data: 'Installing bundled Jibo SDK (offline)...\n' });
@@ -118,10 +140,13 @@ export async function installBundledSkillDeps(projectPath: string): Promise<Tool
 }
 
 export async function buildSkill(projectPath: string): Promise<ToolchainResult> {
+  const compileFailure = await compileIfDsl(projectPath);
+  if (compileFailure) return compileFailure;
+
   emit({ type: 'stdout', data: 'Running jibo-dev build...\n' });
   const bin = jiboDevBin(projectPath);
   if (!existsSync(bin)) {
-    const msg = 'jibo-dev not found. Create the skill again or run npm run vendor.';
+    const msg = 'jibo-dev not found. Create the skill again or ensure vendor/skill-deps is present.';
     emit({ type: 'stderr', data: msg + '\n' });
     return { success: false, code: 1, output: msg };
   }
@@ -130,6 +155,10 @@ export async function buildSkill(projectPath: string): Promise<ToolchainResult> 
 
 export async function watchSkill(projectPath: string): Promise<{ pid: number }> {
   await stopWatch();
+  const compileFailure = await compileIfDsl(projectPath);
+  if (compileFailure) {
+    throw new Error(compileFailure.output || 'JiboScript compile failed');
+  }
   const nodeBin = resolveNodeBin();
   if (!nodeBin) {
     throw new Error(MISSING_BUNDLED_NODE_MSG);
@@ -141,6 +170,10 @@ export async function watchSkill(projectPath: string): Promise<{ pid: number }> 
   });
   watchProcess.stdout?.on('data', (c) => emit({ type: 'stdout', data: c.toString() }));
   watchProcess.stderr?.on('data', (c) => emit({ type: 'stderr', data: c.toString() }));
+  watchProcess.on('close', () => {
+    watchProcess = null;
+    emit({ type: 'exit', code: 0 });
+  });
   return { pid: watchProcess.pid ?? 0 };
 }
 
@@ -171,6 +204,8 @@ async function runRobotAction(
 }
 
 export async function syncToRobot(projectPath: string, host: string): Promise<ToolchainResult> {
+  const compileFailure = await compileIfDsl(projectPath);
+  if (compileFailure) return compileFailure;
   emit({ type: 'stdout', data: `Syncing to ${host}...\n` });
   return runRobotAction('jibo sync', () => syncSkillToRobot(projectPath, host));
 }

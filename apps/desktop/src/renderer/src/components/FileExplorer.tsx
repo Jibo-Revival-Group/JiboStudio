@@ -10,6 +10,7 @@ interface FileExplorerProps {
   files: FileEntry[];
   projectPath: string | null;
   selectedPath: string | null;
+  projectMode?: string | null;
   onOpenFile: (path: string) => void;
   onOpenProject: () => void;
   onNewSkill: () => void;
@@ -117,6 +118,7 @@ export function FileExplorer({
   files,
   projectPath,
   selectedPath,
+  projectMode,
   onOpenFile,
   onOpenProject,
   onNewSkill,
@@ -174,7 +176,14 @@ export function FileExplorer({
 
   return (
     <div className="explorer">
-      <div className="explorer__header">Explorer</div>
+      <div className="explorer__header">
+        Explorer
+        {projectMode ? (
+          <span className="explorer__mode">
+            {projectMode === 'dsl-v1' ? 'JiboScript' : 'Legacy'}
+          </span>
+        ) : null}
+      </div>
       <div className="explorer__actions">
         <button type="button" className="explorer__action" onClick={onOpenProject}>
           <MaterialIcon name="folder_open" size={16} />

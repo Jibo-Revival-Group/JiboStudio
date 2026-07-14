@@ -14,6 +14,17 @@
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--js-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.explorer__mode {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--js-accent);
+  text-transform: uppercase;
 }
 
 .explorer__actions {

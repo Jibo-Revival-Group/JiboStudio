@@ -1,0 +1,10 @@
+# Generated legacy artifacts — edit skill.jibo instead
+src/flows/
+src/behaviors/
+src/rules/
+mims/
+launch.rule
+.jibo-studio/
+node_modules/
+index.js
+index.js.map

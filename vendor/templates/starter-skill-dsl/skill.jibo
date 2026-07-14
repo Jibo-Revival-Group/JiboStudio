@@ -1,0 +1,46 @@
+# JiboScript — Python-like skill source for Jibo Studio
+# Compiles to legacy .flow / .bt / .rule / .mim artifacts for jibo-dev.
+
+skill:
+  name = "starter-skill"
+  display = "template"
+  launch = "what time is it"
+  prompt = "Do something"
+
+flow main:
+  call sayHello with notepad = notepad
+  end
+
+flow sayHello:
+  announce announce_hello with currentSpeaker = notepad.currentSpeaker
+  end
+
+mim announce_hello:
+  type = announcement
+  say "Hello ${currentSpeaker}!" category = "Entry-Core" sub = "AN"
+
+behavior playSound:
+  sequence:
+    play_audio "FX_Bloop.mp3"
+
+raw_rule trigger_skill: """
+# Allow phrases like "say hello", "play a bloop", "say goodbye"
+TopRule = $* (
+    ( (say $hello){action='sayHello'} ) |
+    ( ($play (*a) $sound{sound=sound._item}){action='playSound'} ) |
+    ( (say $goodbye){action='sayGoodbye'} )
+) $*;
+
+sound @= ($w){_item=_parsed};
+play = (play | make);
+hello = (hello | hi);
+goodbye = (good bye) | goodbye | bye;
+"""
+
+raw_rule yesno: """
+TopRule = $* (
+    $yesno{yesNo = yesno._yes_no}
+) $*;
+
+yesno = ($factory:yes_no{_yes_no = yes_no._nl} | ok{_yes_no = 'yes'} | alright{_yes_no = 'yes'} | ready{_yes_no = 'yes'} );
+"""

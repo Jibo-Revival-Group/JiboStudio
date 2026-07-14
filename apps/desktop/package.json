@@ -23,6 +23,7 @@
     "@jibo-studio/editor-mim": "*",
     "@jibo-studio/editor-rules": "*",
     "@jibo-studio/jibo-api-docs": "*",
+    "@jibo-studio/skill-language": "*",
     "@jibo-studio/skill-model": "*",
     "@jibo-studio/ui-shell": "*",
     "@monaco-editor/react": "^4.6.0",

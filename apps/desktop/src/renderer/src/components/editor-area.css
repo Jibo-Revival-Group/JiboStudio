@@ -83,6 +83,50 @@
   cursor: not-allowed;
 }
 
+.editor-toolbar__btn--active {
+  background: var(--js-accent-subtle, rgba(80, 140, 255, 0.2));
+  border-color: var(--js-accent);
+  color: var(--js-accent);
+}
+
+.editor-toolbar__mode {
+  margin-right: auto;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--js-text-muted);
+}
+
+.tab-editor-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.tab-editor-content__body {
+  flex: 1;
+  min-height: 0;
+}
+
+.legacy-banner {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  font-size: 12px;
+  background: color-mix(in srgb, var(--js-accent) 15%, var(--js-bg-sidebar));
+  border-bottom: 1px solid var(--js-border-subtle);
+  color: var(--js-text-muted);
+}
+
+.legacy-banner--editable {
+  background: color-mix(in srgb, #c9a227 18%, var(--js-bg-sidebar));
+}
+
+.legacy-banner code {
+  font-size: 11px;
+}
+
 .editor-empty {
   position: absolute;
   inset: 28px 0 0;

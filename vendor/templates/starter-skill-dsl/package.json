@@ -1,7 +1,7 @@
 {
   "name": "starter-skill",
   "version": "0.1.0",
-  "description": "Jibo starter skill template",
+  "description": "JiboScript starter skill template",
   "main": "index.js",
   "jibo": {
     "main": "index.html",
@@ -9,7 +9,8 @@
     "launchRule": "launch.rule",
     "prompt": "Do something",
     "display-name": "template",
-    "sourceFormat": "legacy-artifacts"
+    "sourceFormat": "dsl-v1",
+    "skillEntry": "skill.jibo"
   },
   "dependencies": {
     "jibo": "5.8.1",

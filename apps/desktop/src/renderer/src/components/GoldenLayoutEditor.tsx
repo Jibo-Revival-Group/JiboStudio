@@ -25,6 +25,7 @@ interface GoldenLayoutEditorProps {
   onSelectTab: (path: string | null) => void;
   onCloseTab: (path: string) => void;
   onChangeContent: (path: string, content: string) => void;
+  diagnosticsByPath?: Record<string, import('../../../shared/types').SourceDiagnostic[]>;
   hidden?: boolean;
 }
 
@@ -103,6 +104,7 @@ export function GoldenLayoutEditor({
   onSelectTab,
   onCloseTab,
   onChangeContent,
+  diagnosticsByPath = {},
   hidden = false,
 }: GoldenLayoutEditorProps) {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -111,6 +113,7 @@ export function GoldenLayoutEditor({
   const suppressEventsRef = useRef(false);
   const tabsRef = useRef(tabs);
   const activeTabRef = useRef(activeTab);
+  const diagnosticsRef = useRef(diagnosticsByPath);
   const handlersRef = useRef({ onSelectTab, onCloseTab, onChangeContent });
   const syncedTabIdsRef = useRef('');
   const syncedTitlesRef = useRef('');
@@ -120,6 +123,7 @@ export function GoldenLayoutEditor({
 
   tabsRef.current = tabs;
   activeTabRef.current = activeTab;
+  diagnosticsRef.current = diagnosticsByPath;
   handlersRef.current = { onSelectTab, onCloseTab, onChangeContent };
   const themeRef = useRef(theme);
   themeRef.current = theme;
@@ -137,6 +141,7 @@ export function GoldenLayoutEditor({
       <TabEditorContent
         tab={tab}
         theme={themeRef.current}
+        diagnostics={diagnosticsRef.current[tab.path] ?? []}
         onChange={(content) => handlersRef.current.onChangeContent(tab.path, content)}
       />,
     );
@@ -332,7 +337,7 @@ export function GoldenLayoutEditor({
     panelsRef.current.forEach((_, tabId) => {
       renderPanel(tabId);
     });
-  }, [theme, layoutReady]);
+  }, [theme, tabs, diagnosticsByPath, layoutReady]);
 
   return (
     <div className={`golden-layout-host${hidden ? ' golden-layout-host--hidden' : ''}`}>
