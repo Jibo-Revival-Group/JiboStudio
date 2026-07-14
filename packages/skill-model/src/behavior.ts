@@ -55,7 +55,9 @@ export function getBehaviorRoot(doc: BehaviorDocument): BehaviorNode | undefined
   for (const [key, value] of Object.entries(doc)) {
     if (key === 'meta') continue;
     const node = value as BehaviorNode;
-    if (node && typeof node.id === 'number' && node.class === 'Sequence' && !node.parent) {
+    // The root node is whichever top-level entry has no parent — it may be any
+    // composite class (Sequence, Switch, Parallel, Random), not just Sequence.
+    if (node && typeof node.id === 'number' && node.parent === undefined) {
       return node;
     }
   }

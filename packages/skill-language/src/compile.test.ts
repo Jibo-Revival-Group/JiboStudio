@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { compileSkillSource, parseSkillSource } from '../src/index.ts';
-import { readFileSync } from 'fs';
+import { compileSkillProject, compileSkillSource, parseSkillSource } from '../src/index.ts';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
+import { tmpdir } from 'os';
 import { fileURLToPath } from 'url';
-import { parseFlow, parseMim, parseRule } from '@jibo-studio/skill-model';
+import { parseBehavior, parseFlow, parseMim, parseRule } from '@jibo-studio/skill-model';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const starterJibo = readFileSync(
@@ -94,5 +95,76 @@ describe('JiboScript compile', () => {
       flowA.nodeDataArray.map((n) => n.id),
       flowB.nodeDataArray.map((n) => n.id),
     );
+  });
+
+  it('lowers "selector" behavior nodes to the real "Switch" BT class', () => {
+    const source = `
+skill:
+  name = "x"
+  launch = "hi"
+behavior pick:
+  selector:
+    play_audio "a.mp3"
+    play_audio "b.mp3"
+`;
+    const result = compileSkillSource(source);
+    assert.equal(result.success, true, JSON.stringify(result.diagnostics, null, 2));
+    const art = result.artifacts.find((a) => a.path === 'src/behaviors/pick.bt');
+    assert.ok(art);
+    const doc = parseBehavior(art!.content);
+    const classes = Object.entries(doc)
+      .filter(([key]) => key !== 'meta')
+      .map(([, node]) => (node as { class: string }).class);
+    // "Selector" is not a valid Jibo BT node class — the runtime only understands "Switch".
+    assert.ok(classes.includes('Switch'));
+    assert.ok(!classes.includes('Selector'));
+  });
+
+  it('flags an unknown rule referenced by a mim', () => {
+    const source = `
+skill:
+  name = "x"
+  launch = "hi"
+mim ask:
+  type = query
+  rule = missingRule
+  say "Ready?"
+`;
+    const result = compileSkillSource(source);
+    assert.equal(result.success, false);
+    assert.ok(result.diagnostics.some((d) => d.message.includes("Unknown rule 'missingRule'")));
+  });
+
+  it('removes stale generated artifacts on recompile after a rename', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'jibo-dsl-'));
+    try {
+      const v1 = `
+skill:
+  name = "x"
+  launch = "hi"
+flow oldFlow:
+  end
+`;
+      writeFileSync(join(dir, 'skill.jibo'), v1, 'utf8');
+      const first = compileSkillProject(dir, 'skill.jibo');
+      assert.equal(first.success, true, JSON.stringify(first.diagnostics, null, 2));
+      const oldFlowPath = join(dir, 'src/flows/oldFlow.flow');
+      assert.ok(existsSync(oldFlowPath));
+
+      const v2 = `
+skill:
+  name = "x"
+  launch = "hi"
+flow newFlow:
+  end
+`;
+      writeFileSync(join(dir, 'skill.jibo'), v2, 'utf8');
+      const second = compileSkillProject(dir, 'skill.jibo');
+      assert.equal(second.success, true, JSON.stringify(second.diagnostics, null, 2));
+      assert.ok(!existsSync(oldFlowPath), 'stale oldFlow.flow should be removed after rename');
+      assert.ok(existsSync(join(dir, 'src/flows/newFlow.flow')));
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

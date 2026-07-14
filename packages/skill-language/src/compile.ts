@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import {
   buildLaunchRule,
@@ -130,15 +130,34 @@ export function compileSkillProject(projectPath: string, entryFile = 'skill.jibo
   const result = compileSkillSource(source, entryFile);
   if (!result.success) return result;
 
+  const studioDir = join(projectPath, '.jibo-studio');
+  const manifestPath = join(studioDir, 'manifest.json');
+  const previousManifest = readPreviousManifest(manifestPath);
+
   for (const artifact of result.artifacts) {
     const abs = join(projectPath, artifact.path);
     mkdirSync(dirname(abs), { recursive: true });
     writeFileSync(abs, artifact.content, 'utf8');
   }
 
-  const studioDir = join(projectPath, '.jibo-studio');
+  // Remove artifacts from a prior compile that are no longer produced (e.g. a
+  // flow/mim/behavior/rule was renamed or deleted in skill.jibo) so stale
+  // generated files don't linger and get picked up by jibo-dev build.
+  if (previousManifest) {
+    for (const path of Object.keys(previousManifest.artifacts)) {
+      if (!(path in result.manifest.artifacts)) {
+        const abs = join(projectPath, path);
+        try {
+          rmSync(abs, { force: true });
+        } catch {
+          // non-fatal
+        }
+      }
+    }
+  }
+
   mkdirSync(studioDir, { recursive: true });
-  writeFileSync(join(studioDir, 'manifest.json'), `${JSON.stringify(result.manifest, null, 2)}\n`, 'utf8');
+  writeFileSync(manifestPath, `${JSON.stringify(result.manifest, null, 2)}\n`, 'utf8');
 
   // Refresh package.json metadata from skill block when present.
   const pkgPath = join(projectPath, 'package.json');
@@ -163,6 +182,15 @@ export function compileSkillProject(projectPath: string, entryFile = 'skill.jibo
   }
 
   return result;
+}
+
+function readPreviousManifest(manifestPath: string): CompileManifest | null {
+  if (!existsSync(manifestPath)) return null;
+  try {
+    return JSON.parse(readFileSync(manifestPath, 'utf8')) as CompileManifest;
+  } catch {
+    return null;
+  }
 }
 
 function simpleHash(source: string): string {

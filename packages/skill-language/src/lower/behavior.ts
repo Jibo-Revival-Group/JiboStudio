@@ -10,7 +10,7 @@ export function lowerBehavior(behavior: BehaviorDecl, file: string): BehaviorDoc
     const children: Array<string | number> = [];
     doc[String(rootId)] = {
       id: rootId,
-      class: behavior.root.kind === 'sequence' ? 'Sequence' : 'Selector',
+      class: behavior.root.kind === 'sequence' ? 'Sequence' : 'Switch',
       name: 'Root',
       'asset-pack': 'core',
       children,
@@ -50,7 +50,7 @@ function emitNode(
     const children: Array<string | number> = [];
     const model: ModelBehaviorNode = {
       id,
-      class: node.kind === 'sequence' ? 'Sequence' : 'Selector',
+      class: node.kind === 'sequence' ? 'Sequence' : 'Switch',
       name: node.kind,
       'asset-pack': 'core',
       parent,

@@ -44,7 +44,25 @@ export function resolveModule(module: SkillModule): Diagnostic[] {
       }
     }
   }
-  for (const mim of module.mims) checkDup('mim', mim.name, mim.span);
+  for (const mim of module.mims) {
+    checkDup('mim', mim.name, mim.span);
+    if (mim.prompts.length === 0) {
+      diagnostics.push({
+        severity: 'warning',
+        message: `Mim '${mim.name}' has no 'say' prompts — a placeholder prompt will be used`,
+        span: mim.span,
+        code: 'resolve',
+      });
+    }
+    if (mim.ruleName && !ruleNames.has(mim.ruleName)) {
+      diagnostics.push({
+        severity: 'error',
+        message: `Unknown rule '${mim.ruleName}' referenced by mim '${mim.name}'`,
+        span: mim.span,
+        code: 'resolve',
+      });
+    }
+  }
   for (const behavior of module.behaviors) checkDup('behavior', behavior.name, behavior.span);
   for (const rule of module.rules) checkDup('rule', rule.name, rule.span);
 
@@ -66,9 +84,9 @@ export function resolveModule(module: SkillModule): Diagnostic[] {
     });
   }
 
-  // Silence unused collections for potential future checks.
+  // Silence unused collection for potential future checks (no DSL construct
+  // currently references behaviors by name from flows/rules).
   void behaviorNames;
-  void ruleNames;
 
   return diagnostics;
 }
