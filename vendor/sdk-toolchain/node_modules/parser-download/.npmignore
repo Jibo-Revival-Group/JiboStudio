@@ -1,0 +1,8 @@
+tmp
+parser
+node_modules
+src
+gulpfile.js
+.gitignore
+tests
+typings

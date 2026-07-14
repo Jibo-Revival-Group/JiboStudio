@@ -1,0 +1,1 @@
+TopRule = $* (hello world){%slotAction='world'%} | (hello mars){%slotAction='mars'%} $*;

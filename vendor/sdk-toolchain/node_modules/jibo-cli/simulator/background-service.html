@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <title>Background Service</title>
+</head>
+<body>
+    <script>
+
+    // Listen for the simulator to send the entry point source file of the background
+    // process
+    const {ipcRenderer} = require('electron');
+    ipcRenderer.on('backgroundMain', function(event, src) {
+        require(src);
+    });
+    </script>
+</body>
+</html>

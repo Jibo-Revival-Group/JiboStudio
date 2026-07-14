@@ -1,0 +1,11 @@
+/.git
+/node_modules/.bin
+/src
+/build
+.DS_Store
+.gitignore
+.npmignore
+.syncignore
+.syncignore-auto
+tsconfig.json
+tslint.json

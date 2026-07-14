@@ -1,0 +1,9 @@
+tbody td.time {
+    color: #666;
+    font-size: 12px;
+    padding-top: 8px;
+}
+
+.desc {
+    width:100%;
+}

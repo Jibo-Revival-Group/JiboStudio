@@ -1,0 +1,12 @@
+.running {
+    width:100%;
+}
+
+.running button {
+    width:50%;
+}
+
+h1 .version {
+    color:#999;
+    font-size: 60%;
+}

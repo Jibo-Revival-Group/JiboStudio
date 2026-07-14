@@ -1,0 +1,14 @@
+/.git
+/.release
+/docs
+/dts
+/src
+/tasks
+/tests
+/typings
+.DS_Store
+.gitignore
+.npmignore
+.syncignore
+gulpfile.js
+typings.json

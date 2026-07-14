@@ -1,0 +1,267 @@
+{
+    "class": "go.GraphLinksModel",
+    "dataFormat": "flow-1",
+    "nodeKeyProperty": "id",
+    "nodeCategoryProperty": "class",
+    "linkFromPortIdProperty": "fromPort",
+    "linkToPortIdProperty": "toPort",
+    "nodeDataArray": [
+        {
+            "class": "Flow.Begin",
+            "name": "Begin",
+            "loc": "-523.171875 -1026.5",
+            "id": "943fb90c-8699-4eb6-9de1-a1cddc841c94",
+            "options": {
+                "inputParameters": [
+                    "()=>{",
+                    "  return {",
+                    "//    parm1: 'parm1_default_value',",
+                    "//    parm2: 'parm2_default_value'",
+                    "  };",
+                    "}"
+                ]
+            },
+            "clazz": "Flow.Begin"
+        },
+        {
+            "class": "Mim.Question",
+            "clazz": "Mim.Question",
+            "loc": "-523 -870",
+            "id": "b0f5c52c-3b23-430c-a2e9-ac663bbf09f5",
+            "options": {
+                "mimPath": "mims/HelloWorld.mim",
+                "getPromptData": [
+                    "() => {",
+                    "\treturn {};",
+                    "}",
+                    "",
+                    ""
+                ],
+                "onStatus": [
+                    "(status) => {",
+                    "\tlet mimState = status.state;",
+                    "\tlet asrResults = status.asrResults;",
+                    "\tlet speakerIds = status.speakerIds;",
+                    "}"
+                ],
+                "onSuccess": [
+                    "(results) => {",
+                    "\tlet mimState = results.state;",
+                    "\tlet asrResults = results.asrResults;",
+                    "\tlet speakerIds = results.speakerIds;",
+                    "\tlet transition = results.firstGrammarTag;",
+                    "\treturn transition;",
+                    "}",
+                    "//Transitions: undefined",
+                    ""
+                ],
+                "onFailure": [
+                    "(results) => {",
+                    "\tlet mimState = results.state;",
+                    "\tlet asrResults = results.asrResults;",
+                    "\tlet speakerIds = results.speakerIds;",
+                    "\tlet exception = results.exception;",
+                    "\treturn exception;",
+                    "}"
+                ]
+            },
+            "name": "Hello World"
+        },
+        {
+            "class": "Mim.Announcement",
+            "clazz": "Mim.Announcement",
+            "loc": "-659 -724",
+            "id": "f8610690-a7d5-453b-abbf-26d28c564f0f",
+            "options": {
+                "mimPath": "mims/YouSaidMars.mim",
+                "getPromptData": [
+                    "() => {",
+                    "\treturn {};",
+                    "}",
+                    "",
+                    ""
+                ]
+            },
+            "name": "You Said Mars"
+        },
+        {
+            "class": "Mim.Announcement",
+            "clazz": "Mim.Announcement",
+            "loc": "-395 -722",
+            "id": "01a34fef-0419-43fe-b89a-67f3a58522eb",
+            "options": {
+                "mimPath": "mims/YouSaidWorld.mim",
+                "getPromptData": [
+                    "() => {",
+                    "\treturn {};",
+                    "}",
+                    "",
+                    ""
+                ]
+            },
+            "name": "You Said World"
+        },
+        {
+            "class": "Flow.Subtree",
+            "clazz": "Flow.Subtree",
+            "loc": "-520 -553",
+            "id": "88d6a8b3-7ee8-46f3-b1d6-f4fcddca5ecb",
+            "options": {
+                "behaviorPath": "../behaviors/idle",
+                "getNotepad": [
+                    "() => {",
+                    "    return {};",
+                    "}"
+                ],
+                "onResult": [
+                    "(treeResult) => {",
+                    "\treturn treeResult.transition;",
+                    "}"
+                ]
+            },
+            "name": "idle"
+        },
+        {
+            "class": "Flow.End",
+            "clazz": "Flow.End",
+            "loc": "-520 -388",
+            "id": "2052e45c-2d10-4dda-9f90-8013d60de749",
+            "options": {
+                "getTransition": [
+                    "() => { return ; }"
+                ]
+            },
+            "name": ""
+        }
+    ],
+    "linkDataArray": [
+        {
+            "from": "b0f5c52c-3b23-430c-a2e9-ac663bbf09f5",
+            "to": "f8610690-a7d5-453b-abbf-26d28c564f0f",
+            "fromPort": "",
+            "toPort": "",
+            "text": "mars",
+            "points": [
+                -576.1425806705407,
+                -864,
+                -586.1425806705407,
+                -864,
+                -659,
+                -864,
+                -659,
+                -812.9855260225262,
+                -659,
+                -761.9710520450524,
+                -659,
+                -751.9710520450524
+            ],
+            "segmentOffset": "29 0"
+        },
+        {
+            "from": "b0f5c52c-3b23-430c-a2e9-ac663bbf09f5",
+            "to": "01a34fef-0419-43fe-b89a-67f3a58522eb",
+            "fromPort": "",
+            "toPort": "",
+            "text": "world",
+            "points": [
+                -469.85741932945933,
+                -869,
+                -459.85741932945933,
+                -869,
+                -395,
+                -869,
+                -395,
+                -814.4855260225262,
+                -395,
+                -759.9710520450524,
+                -395,
+                -749.9710520450524
+            ],
+            "segmentOffset": "22 0"
+        },
+        {
+            "from": "f8610690-a7d5-453b-abbf-26d28c564f0f",
+            "to": "88d6a8b3-7ee8-46f3-b1d6-f4fcddca5ecb",
+            "fromPort": "",
+            "toPort": "",
+            "text": "",
+            "points": [
+                -659,
+                -696.0289479549476,
+                -659,
+                -686.0289479549476,
+                -659,
+                -638.5,
+                -533.8878690939563,
+                -638.5,
+                -533.8878690939563,
+                -590.9710520450524,
+                -533.8878690939563,
+                -580.9710520450524
+            ]
+        },
+        {
+            "from": "01a34fef-0419-43fe-b89a-67f3a58522eb",
+            "to": "88d6a8b3-7ee8-46f3-b1d6-f4fcddca5ecb",
+            "fromPort": "",
+            "toPort": "",
+            "text": "",
+            "points": [
+                -395,
+                -694.0289479549476,
+                -395,
+                -684.0289479549476,
+                -395,
+                -637.5,
+                -506.1121309060438,
+                -637.5,
+                -506.1121309060438,
+                -590.9710520450524,
+                -506.1121309060438,
+                -580.9710520450524
+            ]
+        },
+        {
+            "from": "943fb90c-8699-4eb6-9de1-a1cddc841c94",
+            "to": "b0f5c52c-3b23-430c-a2e9-ac663bbf09f5",
+            "fromPort": "",
+            "toPort": "",
+            "text": "",
+            "points": [
+                -523.171875,
+                -989,
+                -523.171875,
+                -979,
+                -523.171875,
+                -943.4855260225262,
+                -523,
+                -943.4855260225262,
+                -523,
+                -907.9710520450524,
+                -523,
+                -897.9710520450524
+            ]
+        },
+        {
+            "from": "88d6a8b3-7ee8-46f3-b1d6-f4fcddca5ecb",
+            "to": "2052e45c-2d10-4dda-9f90-8013d60de749",
+            "fromPort": "",
+            "toPort": "",
+            "text": "",
+            "points": [
+                -520,
+                -525.0289479549476,
+                -520,
+                -515.0289479549476,
+                -520,
+                -464.53113784790037,
+                -520,
+                -464.53113784790037,
+                -520,
+                -414.03332774085317,
+                -520,
+                -404.03332774085317
+            ]
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+factory:city_state
+factory:date
+factory:state
+factory:time
+factory:yes_no
+factory:timer
+factory:world_city_country
+factory:country
+factory:first_name
+factory:last_name
+factory:music_genre
+factory:digits
+factory:year
+factory:canada_city_province
+factory:canada_province

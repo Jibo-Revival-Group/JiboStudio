@@ -1,0 +1,39 @@
+{
+	"mim_type": "question",
+	"rule_name": "rules/hello-world.fst",
+	"sample_utterances": "world,mars",
+	"timeout": 6,
+	"num_tries_for_gui": 2,
+	"barge_in": true,
+	"es_auto_tagging": true,
+	"notes": "",
+	"prompts": [
+		{
+			"prompt_category": "Entry-Core",
+			"prompt_sub_category": "Q",
+			"index": 1,
+			"condition": "",
+			"prompt": "Say either hello world or hello mars",
+			"media": "TTS",
+			"prompt_id": "ID1"
+		},
+		{
+			"prompt_category": "Entry-Core",
+			"prompt_sub_category": "Q",
+			"index": 1,
+			"condition": "",
+			"prompt": "Can you say hello world?",
+			"media": "TTS",
+			"prompt_id": "ID2"
+		},
+		{
+			"prompt_category": "Entry-Core",
+			"prompt_sub_category": "Q",
+			"index": 1,
+			"condition": "",
+			"prompt": "Can you say hello mars?",
+			"media": "TTS",
+			"prompt_id": "ID3"
+		}
+	]
+}
