@@ -245,6 +245,19 @@ export function GoldenLayoutEditor({
       }
     });
 
+    const updateSize = () => {
+      if (!host.isConnected) return;
+      const { width, height } = host.getBoundingClientRect();
+      if (width > 0 && height > 0) {
+        layout.setSize(width, height);
+      }
+    };
+
+    updateSize();
+    const resizeObserver = new ResizeObserver(() => updateSize());
+    resizeObserver.observe(host);
+    window.addEventListener('resize', updateSize);
+
     layoutRef.current = layout;
     setLayoutReady(true);
 
@@ -254,6 +267,8 @@ export function GoldenLayoutEditor({
       syncedTabIdsRef.current = '';
       syncedTitlesRef.current = '';
       syncedActiveTabRef.current = null;
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateSize);
       unmountAllPanels();
       layout.destroy();
       host.replaceChildren();
@@ -343,7 +358,10 @@ export function GoldenLayoutEditor({
     <div className={`golden-layout-host${hidden ? ' golden-layout-host--hidden' : ''}`}>
       <div ref={hostRef} className="golden-layout-editor-panel" />
       {!hidden && tabs.length === 0 ? (
-        <div className="editor-empty">Select a file from the explorer.</div>
+        <div className="editor-empty">
+          No file open — click the <strong>Explorer</strong> icon in the sidebar to browse this
+          project.
+        </div>
       ) : null}
     </div>
   );

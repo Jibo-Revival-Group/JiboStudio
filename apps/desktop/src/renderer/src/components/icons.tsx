@@ -186,7 +186,14 @@ export function FileTypeIcon({ name, size = 16 }: { name: string; size?: number 
   );
 }
 
-export type ActivityIconId = 'folder' | 'jibo' | 'bug_report' | 'menu_book' | 'help' | 'settings';
+export type ActivityIconId =
+  | 'folder'
+  | 'jibo'
+  | 'bug_report'
+  | 'auto_stories'
+  | 'menu_book'
+  | 'help'
+  | 'settings';
 
 export function ActivityIcon({ icon, title }: { icon: ActivityIconId; title: string }) {
   if (icon === 'jibo') {

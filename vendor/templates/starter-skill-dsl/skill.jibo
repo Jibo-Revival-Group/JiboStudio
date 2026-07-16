@@ -13,6 +13,7 @@ flow main:
 
 flow sayHello:
   announce announce_hello with currentSpeaker = notepad.currentSpeaker
+  run playSound
   end
 
 mim announce_hello:

@@ -14,6 +14,7 @@ export type FlowStep =
   | { kind: 'query'; mim: string; data: Record<string, string>; span: SourceSpan }
   | { kind: 'eval'; source: string; span: SourceSpan }
   | { kind: 'animation'; name: string; span: SourceSpan }
+  | { kind: 'behavior'; name: string; span: SourceSpan }
   | { kind: 'end'; span: SourceSpan };
 
 export interface FlowDecl {

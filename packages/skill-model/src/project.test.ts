@@ -4,6 +4,7 @@ import {
   detectSkillSourceModeFromHints,
   getEditorForFile,
   isGeneratedArtifactPath,
+  needsSourceChoiceFromHints,
 } from '../src/project.ts';
 
 describe('project mode helpers', () => {
@@ -20,6 +21,38 @@ describe('project mode helpers', () => {
 
   it('defaults to legacy', () => {
     assert.equal(detectSkillSourceModeFromHints({ hasSkillEntry: false }), 'legacy-artifacts');
+  });
+
+  it('flags untouched skills for a source-format choice', () => {
+    assert.equal(
+      needsSourceChoiceFromHints({
+        hasSkillEntry: false,
+        looksLikeSkill: true,
+      }),
+      true,
+    );
+    assert.equal(
+      needsSourceChoiceFromHints({
+        sourceFormat: 'legacy-artifacts',
+        hasSkillEntry: false,
+        looksLikeSkill: true,
+      }),
+      false,
+    );
+    assert.equal(
+      needsSourceChoiceFromHints({
+        hasSkillEntry: true,
+        looksLikeSkill: true,
+      }),
+      false,
+    );
+    assert.equal(
+      needsSourceChoiceFromHints({
+        hasSkillEntry: false,
+        looksLikeSkill: false,
+      }),
+      false,
+    );
   });
 
   it('routes .jibo to jibo editor', () => {

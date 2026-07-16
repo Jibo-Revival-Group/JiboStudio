@@ -12,6 +12,16 @@
 
 .golden-layout-host .lm_content {
   background: var(--js-bg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* React roots mount directly into lm_content — fill the panel. */
+.golden-layout-host .lm_content > .tab-editor-content {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .golden-layout-host .lm_splitter {

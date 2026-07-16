@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { FileEntry } from '../../../shared/types';
+import { isGeneratedArtifactPath } from '@jibo-studio/skill-model';
 import { ExpandIcon, FileTypeIcon, FolderIcon, MaterialIcon } from './icons';
 import './explorer.css';
 
@@ -16,14 +17,39 @@ interface FileExplorerProps {
   onNewSkill: () => void;
 }
 
-function collectDefaultExpanded(entries: FileEntry[], maxDepth = 1, depth = 0): Set<string> {
+/**
+ * Directories that hold compiler-generated legacy artifacts stay collapsed by
+ * default in DSL projects — the user edits skill.jibo, not these folders.
+ */
+function isCollapsedByDefault(entryPath: string, projectPath: string, isDsl: boolean): boolean {
+  if (!isDsl) return false;
+  const relative = entryPath.startsWith(projectPath)
+    ? entryPath.slice(projectPath.length).replace(/^[\\/]/, '')
+    : entryPath;
+  return isGeneratedArtifactPath(`${relative}/`);
+}
+
+function collectDefaultExpanded(
+  entries: FileEntry[],
+  projectPath: string,
+  isDsl: boolean,
+  maxDepth = 1,
+  depth = 0,
+): Set<string> {
   const expanded = new Set<string>();
   if (depth > maxDepth) return expanded;
   for (const entry of entries) {
     if (entry.type === 'directory') {
+      if (isCollapsedByDefault(entry.path, projectPath, isDsl)) continue;
       expanded.add(entry.path);
       if (entry.children) {
-        for (const path of collectDefaultExpanded(entry.children, maxDepth, depth + 1)) {
+        for (const path of collectDefaultExpanded(
+          entry.children,
+          projectPath,
+          isDsl,
+          maxDepth,
+          depth + 1,
+        )) {
           expanded.add(path);
         }
       }
@@ -137,11 +163,11 @@ export function FileExplorer({
       return;
     }
     if (expandedSeedKey !== projectPath && files.length > 0) {
-      setExpandedPaths(collectDefaultExpanded(files));
+      setExpandedPaths(collectDefaultExpanded(files, projectPath, projectMode === 'dsl-v1'));
       setExpandedSeedKey(projectPath);
       setRootExpanded(true);
     }
-  }, [projectPath, files, expandedSeedKey]);
+  }, [projectPath, files, expandedSeedKey, projectMode]);
 
   useEffect(() => {
     if (!projectPath || !selectedPath) return;

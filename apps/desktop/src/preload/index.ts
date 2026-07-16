@@ -19,6 +19,8 @@ const api: JiboStudioAPI = {
   compileSkill: (projectPath) => ipcRenderer.invoke('skill:compile', projectPath),
   validateSkillSource: (projectPath, filePath, content) =>
     ipcRenderer.invoke('skill:validate', projectPath, filePath, content),
+  keepProjectLegacy: (projectPath) => ipcRenderer.invoke('skill:keepLegacy', projectPath),
+  migrateProjectToDsl: (projectPath) => ipcRenderer.invoke('skill:migrateToDsl', projectPath),
   toolchainBuild: (projectPath) => ipcRenderer.invoke('toolchain:build', projectPath),
   toolchainWatch: (projectPath) => ipcRenderer.invoke('toolchain:watch', projectPath),
   toolchainStopWatch: () => ipcRenderer.invoke('toolchain:stopWatch'),

@@ -104,6 +104,23 @@ export function lowerFlow(flow: FlowDecl, file: string): FlowDocument {
         },
         name: step.name,
       });
+    } else if (step.kind === 'behavior') {
+      // Runtime class is the bare 'Subtree' (not 'Flow.Subtree' — that's only
+      // the editor/schema key). jibo-dev's Flowify transform matches on
+      // node.class === 'Subtree' to wrap behaviorPath in a require() call, the
+      // same way it wraps Flow.Subflow's subflowId.
+      nodes.push({
+        class: 'Subtree',
+        clazz: 'Subtree',
+        loc: `200 ${y}`,
+        id,
+        options: {
+          behaviorPath: `../behaviors/${step.name}`,
+          getNotepad: ['() => {', '    return {};', '}'],
+          onResult: ['(treeResult) => {', '    return treeResult.transition;', '}'],
+        },
+        name: step.name,
+      });
     }
 
     links.push({ from: prevId, to: id, fromPort: '', toPort: '' });

@@ -14,7 +14,9 @@ import { ActivityBar } from './components/ActivityBar';
 import { RobotPanel } from './components/RobotPanel';
 import { DebuggerPanel } from './components/DebuggerPanel';
 import { NewSkillWizard } from './components/NewSkillWizard';
+import { SourceChoiceDialog, type SourceChoice } from './components/SourceChoiceDialog';
 import { ApiDocsPanel } from './components/ApiDocsPanel';
+import { JiboScriptGuide } from './components/JiboScriptGuide';
 import { WelcomeTutorial } from './components/WelcomeTutorial';
 import { SettingsPanel } from './components/SettingsPanel';
 import { StatusBar } from './components/StatusBar';
@@ -31,7 +33,7 @@ export interface OpenTab {
   generated: boolean;
 }
 
-type SidebarView = 'explorer' | 'robot' | 'debug' | 'api' | 'tutorial' | 'settings';
+type SidebarView = 'explorer' | 'robot' | 'debug' | 'guide' | 'api' | 'tutorial' | 'settings';
 
 export function App() {
   const [projectPath, setProjectPath] = useState<string | null>(null);
@@ -42,6 +44,9 @@ export function App() {
   const [sidebarView, setSidebarView] = useState<SidebarView>('explorer');
   const [terminalOutput, setTerminalOutput] = useState<string>('');
   const [showWizard, setShowWizard] = useState(false);
+  const [sourceChoicePath, setSourceChoicePath] = useState<string | null>(null);
+  const [sourceChoiceBusy, setSourceChoiceBusy] = useState(false);
+  const [sourceChoiceError, setSourceChoiceError] = useState<string | null>(null);
   const [robotProfiles, setRobotProfiles] = useState<RobotProfile[]>([]);
   const [activeRobot, setActiveRobot] = useState<RobotProfile | null>(null);
   const [showTutorial, setShowTutorial] = useState(true);
@@ -49,8 +54,11 @@ export function App() {
   const [building, setBuilding] = useState(false);
   const [watching, setWatching] = useState(false);
   const [diagnosticsByPath, setDiagnosticsByPath] = useState<Record<string, SourceDiagnostic[]>>({});
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [showOutputPanel, setShowOutputPanel] = useState(false);
   const tabsRef = useRef(tabs);
   tabsRef.current = tabs;
+  const autoOpenedProjectRef = useRef<string | null>(null);
 
   const refreshFiles = useCallback(async (root: string) => {
     const tree = await window.jiboStudio.listFiles(root);
@@ -74,9 +82,12 @@ export function App() {
   );
 
   const openProject = useCallback(
-    async (path: string) => {
+    async (path: string, options?: { skipSourceChoice?: boolean }) => {
       try {
         setProjectPath(path);
+        setTabs([]);
+        setActiveTab(null);
+        autoOpenedProjectRef.current = null;
         await refreshFiles(path);
         const mode = await refreshMode(path);
         setShowTutorial(false);
@@ -86,6 +97,10 @@ export function App() {
         if (watching) {
           await window.jiboStudio.toolchainStopWatch();
           setWatching(false);
+        }
+        if (!options?.skipSourceChoice && mode.needsSourceChoice) {
+          setSourceChoiceError(null);
+          setSourceChoicePath(path);
         }
       } catch (error) {
         setProjectPath(null);
@@ -98,6 +113,45 @@ export function App() {
     },
     [refreshFiles, refreshMode, watching],
   );
+
+  const handleSourceChoice = async (choice: SourceChoice) => {
+    if (!sourceChoicePath) return;
+    setSourceChoiceBusy(true);
+    setSourceChoiceError(null);
+    try {
+      if (choice === 'legacy') {
+        const result = await window.jiboStudio.keepProjectLegacy(sourceChoicePath);
+        if (!result.success) {
+          setSourceChoiceError(result.output || 'Failed to keep legacy mode.');
+          return;
+        }
+        setSourceChoicePath(null);
+        await openProject(sourceChoicePath, { skipSourceChoice: true });
+        setStatusMessage('Keeping legacy artifacts for this skill');
+        return;
+      }
+
+      setShowOutputPanel(true);
+      setTerminalOutput('Migrating legacy skill → JiboScript...\n');
+      const result = await window.jiboStudio.migrateProjectToDsl(sourceChoicePath);
+      setTerminalOutput((prev) => `${prev}${result.output}\n`);
+      if (!result.success) {
+        setSourceChoiceError(result.output || 'Migration failed.');
+        return;
+      }
+      setSourceChoicePath(null);
+      await openProject(sourceChoicePath, { skipSourceChoice: true });
+      setStatusMessage(
+        result.warnings.length
+          ? `Migrated with ${result.warnings.length} warning(s) — review skill.jibo`
+          : 'Migrated to JiboScript',
+      );
+    } catch (error) {
+      setSourceChoiceError(error instanceof Error ? error.message : String(error));
+    } finally {
+      setSourceChoiceBusy(false);
+    }
+  };
 
   const handleOpenProject = async () => {
     const path = await window.jiboStudio.openProject();
@@ -137,6 +191,17 @@ export function App() {
       console.error('Failed to open file', error);
     }
   };
+
+  // Open the skill's entry point automatically so a newly created/opened
+  // JiboScript project doesn't drop the user into an empty editor.
+  useEffect(() => {
+    if (!projectPath || !projectMode) return;
+    if (autoOpenedProjectRef.current === projectPath) return;
+    autoOpenedProjectRef.current = projectPath;
+    if (projectMode.mode === 'dsl-v1' && projectMode.entryFile) {
+      void openFile(`${projectPath}/${projectMode.entryFile}`);
+    }
+  }, [projectPath, projectMode]);
 
   const updateTabContent = (path: string, content: string) => {
     setTabs((prev) =>
@@ -194,6 +259,7 @@ export function App() {
         setStatusMessage('Compiled legacy artifacts');
       } else {
         setStatusMessage('Compile failed');
+        setShowOutputPanel(true);
       }
     }
   };
@@ -214,6 +280,7 @@ export function App() {
   const runBuild = async () => {
     if (!projectPath) return;
     setBuilding(true);
+    setShowOutputPanel(true);
     setTerminalOutput('');
     setStatusMessage('Building...');
     try {
@@ -236,6 +303,7 @@ export function App() {
       setStatusMessage('Watch stopped');
       return;
     }
+    setShowOutputPanel(true);
     setTerminalOutput('');
     setStatusMessage('Starting watch...');
     try {
@@ -295,6 +363,15 @@ export function App() {
         ? 'Legacy'
         : null;
 
+  const handleSidebarChange = (view: SidebarView) => {
+    if (sidebarVisible && sidebarView === view) {
+      setSidebarVisible(false);
+      return;
+    }
+    setSidebarView(view);
+    setSidebarVisible(true);
+  };
+
   const sidebarContent = () => {
     switch (sidebarView) {
       case 'robot':
@@ -311,6 +388,8 @@ export function App() {
         );
       case 'debug':
         return <DebuggerPanel host={activeRobot?.host ?? null} />;
+      case 'guide':
+        return <JiboScriptGuide />;
       case 'api':
         return <ApiDocsPanel />;
       case 'tutorial':
@@ -346,11 +425,13 @@ export function App() {
         activityBar={
           <ActivityBar
             active={sidebarView}
-            onChange={setSidebarView}
+            sidebarVisible={sidebarVisible}
+            onChange={handleSidebarChange}
             hasProject={!!projectPath}
           />
         }
         sidebar={sidebarContent()}
+        sidebarVisible={sidebarVisible}
         editor={
           <EditorArea
             tabs={tabs}
@@ -365,6 +446,8 @@ export function App() {
             onToggleWatch={toggleWatch}
             watching={watching}
             building={building}
+            showOutputPanel={showOutputPanel}
+            onToggleOutputPanel={() => setShowOutputPanel((v) => !v)}
             hasProject={!!projectPath}
             projectModeLabel={modeLabel}
             onOpenProject={handleOpenProject}
@@ -373,7 +456,7 @@ export function App() {
         }
         panel={<TerminalPanel output={terminalOutput} onClear={() => setTerminalOutput('')} />}
         panelTitle="Build Output"
-        panelVisible={true}
+        panelVisible={!!projectPath && showOutputPanel}
         statusBar={
           <StatusBar
             message={statusMessage}
@@ -390,14 +473,26 @@ export function App() {
           onClose={() => setShowWizard(false)}
           onCreated={async (path) => {
             setShowWizard(false);
-            await openProject(path);
+            await openProject(path, { skipSourceChoice: true });
           }}
         />
       )}
-      {showTutorial && !projectPath && sidebarView !== 'tutorial' && (
+      {sourceChoicePath && (
+        <SourceChoiceDialog
+          projectName={sourceChoicePath.split('/').pop() ?? sourceChoicePath}
+          busy={sourceChoiceBusy}
+          error={sourceChoiceError}
+          onChoose={(choice) => void handleSourceChoice(choice)}
+          onCancel={() => {
+            if (sourceChoiceBusy) return;
+            setSourceChoicePath(null);
+          }}
+        />
+      )}
+      {showTutorial && !projectPath && !(sidebarVisible && sidebarView === 'tutorial') && (
         <div className="tutorial-banner">
           <span>New to Jibo Studio?</span>
-          <button type="button" onClick={() => setSidebarView('tutorial')}>
+          <button type="button" onClick={() => handleSidebarChange('tutorial')}>
             Start tutorial
           </button>
           <button type="button" onClick={() => setShowTutorial(false)}>

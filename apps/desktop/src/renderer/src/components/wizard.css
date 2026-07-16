@@ -58,6 +58,20 @@
   padding: 20px;
 }
 
+.wizard__lead {
+  margin: 0 0 16px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--js-text);
+}
+
+.wizard__note {
+  margin: 12px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--js-text-muted);
+}
+
 .wizard__body label {
   display: block;
   margin-bottom: 16px;

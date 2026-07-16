@@ -42,6 +42,14 @@ export function resolveModule(module: SkillModule): Diagnostic[] {
           code: 'resolve',
         });
       }
+      if (step.kind === 'behavior' && !behaviorNames.has(step.name)) {
+        diagnostics.push({
+          severity: 'error',
+          message: `Unknown behavior '${step.name}'`,
+          span: step.span,
+          code: 'resolve',
+        });
+      }
     }
   }
   for (const mim of module.mims) {
@@ -83,10 +91,6 @@ export function resolveModule(module: SkillModule): Diagnostic[] {
       code: 'resolve',
     });
   }
-
-  // Silence unused collection for potential future checks (no DSL construct
-  // currently references behaviors by name from flows/rules).
-  void behaviorNames;
 
   return diagnostics;
 }

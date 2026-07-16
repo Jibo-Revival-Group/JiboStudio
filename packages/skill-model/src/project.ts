@@ -31,11 +31,12 @@ export function getEditorForFile(
   filePath: string,
   _mode: SkillSourceMode = 'legacy-artifacts',
 ): EditorKind {
-  if (filePath.endsWith('.jibo')) return 'jibo';
-  if (filePath.endsWith('.flow')) return 'flow';
-  if (filePath.endsWith('.bt')) return 'behavior';
-  if (filePath.endsWith('.rule')) return 'rule';
-  if (filePath.endsWith('.mim')) return 'mim';
+  const lower = filePath.toLowerCase();
+  if (lower.endsWith('.jibo')) return 'jibo';
+  if (lower.endsWith('.flow')) return 'flow';
+  if (lower.endsWith('.bt')) return 'behavior';
+  if (lower.endsWith('.rule')) return 'rule';
+  if (lower.endsWith('.mim')) return 'mim';
   return 'monaco';
 }
 
@@ -69,4 +70,20 @@ export function detectSkillSourceModeFromHints(hints: {
   if (hints.sourceFormat === 'legacy-artifacts') return 'legacy-artifacts';
   if (hints.hasSkillEntry) return 'dsl-v1';
   return 'legacy-artifacts';
+}
+
+/**
+ * True when this looks like a Jibo skill that Studio has never claimed —
+ * no explicit `jibo.sourceFormat` and no `skill.jibo` yet. Opening such a
+ * project should offer Keep Legacy vs Migrate to JiboScript.
+ */
+export function needsSourceChoiceFromHints(hints: {
+  sourceFormat?: string;
+  hasSkillEntry: boolean;
+  looksLikeSkill: boolean;
+}): boolean {
+  if (!hints.looksLikeSkill) return false;
+  if (hints.sourceFormat === 'dsl-v1' || hints.sourceFormat === 'legacy-artifacts') return false;
+  if (hints.hasSkillEntry) return false;
+  return true;
 }

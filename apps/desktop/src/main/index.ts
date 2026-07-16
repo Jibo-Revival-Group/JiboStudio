@@ -39,6 +39,20 @@ function createWindow(): void {
 
   setupWindow(win);
 
+  // Surface renderer console output (incl. uncaught errors, failed dynamic
+  // imports, etc.) in the same terminal running `npm run dev`, since this is
+  // an offline desktop app and DevTools isn't always open during debugging.
+  const LEVEL_NAMES = ['verbose', 'info', 'warning', 'error'] as const;
+  win.webContents.on('console-message', (_e, level, message, line, sourceId) => {
+    const name = LEVEL_NAMES[level] ?? 'log';
+    if (name === 'error' || name === 'warning') {
+      console.log(`[renderer:${name}] ${message} (${sourceId}:${line})`);
+    }
+  });
+  win.webContents.on('render-process-gone', (_e, details) => {
+    console.error('[renderer process gone]', details.reason);
+  });
+
   win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };

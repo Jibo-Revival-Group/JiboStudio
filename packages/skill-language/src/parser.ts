@@ -149,6 +149,10 @@ class Parser {
       const name = this.expectStringOrIdent();
       return { kind: 'animation', name, span: this.previous().span };
     }
+    if (this.matchKeyword('run')) {
+      const name = this.expectIdentOrKeyword().value;
+      return { kind: 'behavior', name, span: this.previous().span };
+    }
     if (this.matchKeyword('end')) {
       return { kind: 'end', span: this.previous().span };
     }

@@ -74,5 +74,10 @@ export const FLOW_NODE_PALETTE = [
   { class: 'Flow.Eval', label: 'Eval Script', category: 'Flow' },
   { class: 'Mim.Announcement', label: 'MIM Announcement', category: 'MIM' },
   { class: 'PlayAnimation', label: 'Play Animation', category: 'Core' },
-  { class: 'Flow.CallSubflow', label: 'Call Subflow', category: 'Flow' },
+  // Runtime class is 'Flow.Subflow' (not 'Flow.CallSubflow' — that string
+  // isn't a real activity and jibo-dev's Flowify would silently no-op it).
+  { class: 'Flow.Subflow', label: 'Call Subflow', category: 'Flow' },
+  // Runtime class is the bare 'Subtree' (not 'Flow.Subtree') — see
+  // jibo-dev's Flowify.transform, which only rewrites node.class === 'Subtree'.
+  { class: 'Subtree', label: 'Run Behavior', category: 'Flow' },
 ] as const;

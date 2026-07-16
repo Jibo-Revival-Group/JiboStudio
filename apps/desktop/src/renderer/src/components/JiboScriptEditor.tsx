@@ -1,8 +1,8 @@
-import Editor, { type OnMount } from '@monaco-editor/react';
 import { useEffect, useRef } from 'react';
-import type { editor as MonacoEditor, IDisposable } from 'monaco-editor';
+import type { editor as MonacoEditor } from 'monaco-editor';
 import type { SourceDiagnostic, ThemeMode } from '../../../shared/types';
-import { getMonacoTheme, setupMonacoTheme } from '../monaco-theme';
+import { monaco, type Monaco } from '../monaco-setup';
+import { OfflineMonacoEditor } from './OfflineMonacoEditor';
 
 interface JiboScriptEditorProps {
   path: string;
@@ -15,11 +15,11 @@ interface JiboScriptEditorProps {
 
 let languageRegistered = false;
 
-function ensureJiboLanguage(monaco: typeof import('monaco-editor')): void {
+function ensureJiboLanguage(monacoApi: Monaco): void {
   if (languageRegistered) return;
   languageRegistered = true;
-  monaco.languages.register({ id: 'jiboscript' });
-  monaco.languages.setMonarchTokensProvider('jiboscript', {
+  monacoApi.languages.register({ id: 'jiboscript' });
+  monacoApi.languages.setMonarchTokensProvider('jiboscript', {
     keywords: [
       'skill',
       'flow',
@@ -32,6 +32,7 @@ function ensureJiboLanguage(monaco: typeof import('monaco-editor')): void {
       'query',
       'eval',
       'animate',
+      'run',
       'end',
       'with',
       'say',
@@ -71,7 +72,7 @@ function ensureJiboLanguage(monaco: typeof import('monaco-editor')): void {
       ],
     },
   });
-  monaco.languages.setLanguageConfiguration('jiboscript', {
+  monacoApi.languages.setLanguageConfiguration('jiboscript', {
     comments: { lineComment: '#' },
     brackets: [
       ['{', '}'],
@@ -95,65 +96,14 @@ function ensureJiboLanguage(monaco: typeof import('monaco-editor')): void {
   });
 }
 
-export function JiboScriptEditor({
-  path,
-  content,
-  theme,
-  diagnostics = [],
-  readOnly,
-  onChange,
-}: JiboScriptEditorProps) {
-  const editorRef = useRef<MonacoEditor.IStandaloneCodeEditor | null>(null);
-  const monacoRef = useRef<typeof import('monaco-editor') | null>(null);
-  const modelPath = `file:///${path.replace(/\\/g, '/')}`;
-
-  const handleMount: OnMount = (ed, monaco) => {
-    editorRef.current = ed;
-    monacoRef.current = monaco;
-    ensureJiboLanguage(monaco);
-    applyMarkers(monaco, ed, diagnostics);
-  };
-
-  useEffect(() => {
-    const monaco = monacoRef.current;
-    const ed = editorRef.current;
-    if (monaco && ed) applyMarkers(monaco, ed, diagnostics);
-  }, [diagnostics]);
-
-  return (
-    <Editor
-      height="100%"
-      theme={getMonacoTheme(theme)}
-      language="jiboscript"
-      path={modelPath}
-      value={content}
-      onChange={(value) => onChange(value ?? '')}
-      beforeMount={(monaco) => {
-        setupMonacoTheme(monaco);
-        ensureJiboLanguage(monaco);
-      }}
-      onMount={handleMount}
-      options={{
-        readOnly: !!readOnly,
-        minimap: { enabled: false },
-        fontSize: 13,
-        wordWrap: 'on',
-        automaticLayout: true,
-        tabSize: 2,
-        renderValidationDecorations: 'on',
-      }}
-    />
-  );
-}
-
 function applyMarkers(
-  monaco: typeof import('monaco-editor'),
+  monacoApi: Monaco,
   ed: MonacoEditor.IStandaloneCodeEditor,
   diagnostics: SourceDiagnostic[],
 ): void {
   const model = ed.getModel();
   if (!model) return;
-  monaco.editor.setModelMarkers(
+  monacoApi.editor.setModelMarkers(
     model,
     'jiboscript',
     diagnostics.map((d) => ({
@@ -164,13 +114,47 @@ function applyMarkers(
       message: d.message,
       severity:
         d.severity === 'error'
-          ? monaco.MarkerSeverity.Error
+          ? monacoApi.MarkerSeverity.Error
           : d.severity === 'warning'
-            ? monaco.MarkerSeverity.Warning
-            : monaco.MarkerSeverity.Info,
+            ? monacoApi.MarkerSeverity.Warning
+            : monacoApi.MarkerSeverity.Info,
     })),
   );
 }
 
-// Keep TypeScript happy when tree-shaking removes unused imports in some builds.
-void (null as unknown as IDisposable);
+// Register before any OfflineMonacoEditor creates a jiboscript model.
+ensureJiboLanguage(monaco);
+
+export function JiboScriptEditor({
+  path,
+  content,
+  theme,
+  diagnostics = [],
+  readOnly,
+  onChange,
+}: JiboScriptEditorProps) {
+  const editorRef = useRef<MonacoEditor.IStandaloneCodeEditor | null>(null);
+  const monacoRef = useRef<Monaco | null>(null);
+
+  useEffect(() => {
+    const monacoApi = monacoRef.current;
+    const ed = editorRef.current;
+    if (monacoApi && ed) applyMarkers(monacoApi, ed, diagnostics);
+  }, [diagnostics]);
+
+  return (
+    <OfflineMonacoEditor
+      path={path}
+      content={content}
+      language="jiboscript"
+      theme={theme}
+      readOnly={readOnly}
+      onChange={onChange}
+      onMount={(ed, monacoApi) => {
+        editorRef.current = ed;
+        monacoRef.current = monacoApi;
+        applyMarkers(monacoApi, ed, diagnostics);
+      }}
+    />
+  );
+}

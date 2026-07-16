@@ -9,11 +9,15 @@ interface WelcomeTutorialProps {
 const STEPS = [
   {
     title: 'Create a JiboScript skill',
-    body: 'New skills default to skill.jibo — a Python-like source language.',
+    body: 'New skills default to skill.jibo — a Python-like source language. Opening a project opens it automatically.',
   },
   {
     title: 'Write your skill',
     body: 'Describe flows, mims, behaviors, and rules in JiboScript. Save compiles to legacy artifacts.',
+  },
+  {
+    title: 'Need the syntax?',
+    body: 'Click the book icon in the sidebar for the JiboScript Guide — every keyword with examples.',
   },
   {
     title: 'Build for Jibo',

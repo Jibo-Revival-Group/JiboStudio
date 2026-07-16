@@ -17,6 +17,8 @@ interface EditorAreaProps {
   onToggleWatch: () => void;
   watching: boolean;
   building: boolean;
+  showOutputPanel: boolean;
+  onToggleOutputPanel: () => void;
   hasProject: boolean;
   projectModeLabel: string | null;
   onOpenProject: () => void;
@@ -36,6 +38,8 @@ export function EditorArea({
   onToggleWatch,
   watching,
   building,
+  showOutputPanel,
+  onToggleOutputPanel,
   hasProject,
   projectModeLabel,
   onOpenProject,
@@ -69,6 +73,14 @@ export function EditorArea({
             disabled={building}
           >
             {watching ? 'Stop Watch' : 'Watch'}
+          </button>
+          <div className="editor-toolbar__spacer" />
+          <button
+            type="button"
+            className={`editor-toolbar__btn ${showOutputPanel ? 'editor-toolbar__btn--active' : 'editor-toolbar__btn--secondary'}`}
+            onClick={onToggleOutputPanel}
+          >
+            Output
           </button>
         </div>
       ) : null}

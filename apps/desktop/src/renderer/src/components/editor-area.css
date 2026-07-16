@@ -89,6 +89,10 @@
   color: var(--js-accent);
 }
 
+.editor-toolbar__spacer {
+  flex: 1;
+}
+
 .editor-toolbar__mode {
   margin-right: auto;
   font-size: 11px;
@@ -102,12 +106,16 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
   min-height: 0;
+  position: relative;
 }
 
 .tab-editor-content__body {
   flex: 1;
   min-height: 0;
+  position: relative;
+  overflow: hidden;
 }
 
 .legacy-banner {

@@ -68,6 +68,36 @@ describe('JiboScript compile', () => {
     assert.equal((sub?.options as { subflowId?: string })?.subflowId, './sayHello');
   });
 
+  it('lowers "run" flow steps to a bare "Subtree" node with a behaviorPath require', () => {
+    const result = compileSkillSource(starterJibo, 'skill.jibo');
+    const sayHello = result.artifacts.find((a) => a.path === 'src/flows/sayHello.flow');
+    assert.ok(sayHello);
+    const doc = parseFlow(sayHello!.content);
+    // Runtime class must be the bare "Subtree" (not "Flow.Subtree") — jibo-dev's
+    // Flowify transform only matches node.class === 'Subtree' when wrapping
+    // behaviorPath in a require() call.
+    const subtree = doc.nodeDataArray.find((n) => n.class === 'Subtree');
+    assert.ok(subtree, 'expected a Subtree node for "run playSound"');
+    assert.equal(
+      (subtree?.options as { behaviorPath?: string })?.behaviorPath,
+      '../behaviors/playSound',
+    );
+  });
+
+  it('flags an unknown behavior referenced by "run"', () => {
+    const source = `
+skill:
+  name = "x"
+  launch = "hi"
+flow main:
+  run missingBehavior
+  end
+`;
+    const result = compileSkillSource(source);
+    assert.equal(result.success, false);
+    assert.ok(result.diagnostics.some((d) => d.message.includes("Unknown behavior 'missingBehavior'")));
+  });
+
   it('produces announce_hello.mim matching starter prompts', () => {
     const result = compileSkillSource(starterJibo, 'skill.jibo');
     const mimArt = result.artifacts.find((a) => a.path === 'mims/announce_hello.mim');

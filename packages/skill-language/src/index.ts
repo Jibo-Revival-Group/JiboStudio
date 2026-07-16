@@ -18,3 +18,8 @@ export {
   type CompileArtifact,
   type CompileManifest,
 } from './compile';
+export {
+  migrateLegacyProjectToDsl,
+  claimLegacyProject,
+  type MigrateResult,
+} from './migrate';

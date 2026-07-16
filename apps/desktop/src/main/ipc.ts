@@ -29,6 +29,8 @@ import { loadSettings, updateSettings } from './settings';
 import {
   compileProjectToLegacy,
   getProjectModeInfo,
+  keepProjectLegacy,
+  migrateProjectToDsl,
   validateSkillFile,
 } from './skill-compiler';
 import type { AppSettings, CreateSkillOptions, RobotProfile } from '../shared/types';
@@ -105,6 +107,10 @@ export function registerIpcHandlers(): void {
     (_e, projectPath: string, filePath: string, content: string) =>
       validateSkillFile(projectPath, filePath, content),
   );
+
+  ipcMain.handle('skill:keepLegacy', (_e, projectPath: string) => keepProjectLegacy(projectPath));
+
+  ipcMain.handle('skill:migrateToDsl', (_e, projectPath: string) => migrateProjectToDsl(projectPath));
 
   ipcMain.handle('toolchain:build', (_e, projectPath: string) => buildSkill(projectPath));
 

@@ -1,12 +1,11 @@
-import Editor from '@monaco-editor/react';
 import { FlowEditor } from '@jibo-studio/editor-flow';
 import { BehaviorEditor } from '@jibo-studio/editor-behavior';
 import { MimEditor } from '@jibo-studio/editor-mim';
 import { RulesEditor } from '@jibo-studio/editor-rules';
 import type { OpenTab } from '../App';
 import type { SourceDiagnostic, ThemeMode } from '../../../shared/types';
-import { getMonacoTheme, setupMonacoTheme } from '../monaco-theme';
 import { JiboScriptEditor } from './JiboScriptEditor';
+import { OfflineMonacoEditor } from './OfflineMonacoEditor';
 
 interface TabEditorContentProps {
   tab: OpenTab;
@@ -16,7 +15,6 @@ interface TabEditorContentProps {
 }
 
 export function TabEditorContent({ tab, theme, diagnostics = [], onChange }: TabEditorContentProps) {
-  const monacoTheme = getMonacoTheme(theme);
   const legacyBanner = tab.generated ? (
     <div className="legacy-banner" role="status">
       Legacy generated artifact — edit <code>skill.jibo</code> instead.
@@ -49,20 +47,12 @@ export function TabEditorContent({ tab, theme, diagnostics = [], onChange }: Tab
         return <RulesEditor content={tab.content} onChange={onChange} readOnly={tab.generated} />;
       default:
         return (
-          <Editor
-            height="100%"
-            theme={monacoTheme}
+          <OfflineMonacoEditor
+            path={tab.path}
+            content={tab.content}
             language={getMonacoLanguage(tab.name)}
-            path={`file:///${tab.path.replace(/\\/g, '/')}`}
-            value={tab.content}
-            onChange={(value) => onChange(value ?? '')}
-            beforeMount={setupMonacoTheme}
-            options={{
-              minimap: { enabled: false },
-              fontSize: 13,
-              wordWrap: 'on',
-              automaticLayout: true,
-            }}
+            theme={theme}
+            onChange={onChange}
           />
         );
     }

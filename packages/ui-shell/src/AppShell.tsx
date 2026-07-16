@@ -6,6 +6,7 @@ import './shell.css';
 export interface AppShellProps {
   activityBar: ReactNode;
   sidebar: ReactNode;
+  sidebarVisible?: boolean;
   editor: ReactNode;
   panel?: ReactNode;
   panelTitle?: string;
@@ -18,6 +19,7 @@ export interface AppShellProps {
 export function AppShell({
   activityBar,
   sidebar,
+  sidebarVisible = true,
   editor,
   panel,
   panelTitle = 'Terminal',
@@ -34,7 +36,7 @@ export function AppShell({
       </header>
       <div className="js-body">
         <aside className="js-activity-bar">{activityBar}</aside>
-        <aside className="js-sidebar">{sidebar}</aside>
+        {sidebarVisible && <aside className="js-sidebar">{sidebar}</aside>}
         <main className="js-main">
           <div className="js-editor-area">{editor}</div>
           {panelVisible && panel && (

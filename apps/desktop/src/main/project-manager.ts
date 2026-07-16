@@ -57,6 +57,11 @@ export function copyTemplate(templateDir: string, targetDir: string): void {
   cpSync(templateDir, targetDir, { recursive: true, filter: (src) => !src.includes('node_modules') });
 }
 
+/** Make user-supplied text safe to splice into a JiboScript double-quoted string literal. */
+function escapeJiboStringLiteral(value: string): string {
+  return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/[\r\n]+/g, ' ');
+}
+
 export function customizeSkillProject(projectDir: string, options: CreateSkillOptions): void {
   const pkgPath = join(projectDir, 'package.json');
   const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
@@ -77,11 +82,14 @@ export function customizeSkillProject(projectDir: string, options: CreateSkillOp
     const entryPath = join(projectDir, 'skill.jibo');
     if (existsSync(entryPath)) {
       let source = readFileSync(entryPath, 'utf8');
+      const name = escapeJiboStringLiteral(options.name);
+      const displayName = escapeJiboStringLiteral(options.displayName);
+      const launchPhrase = escapeJiboStringLiteral(options.launchPhrase);
       source = source
-        .replace(/name = "[^"]*"/, `name = "${options.name}"`)
-        .replace(/display = "[^"]*"/, `display = "${options.displayName}"`)
-        .replace(/launch = "[^"]*"/, `launch = "${options.launchPhrase}"`)
-        .replace(/prompt = "[^"]*"/, `prompt = "${options.launchPhrase}"`);
+        .replace(/name = "[^"]*"/, `name = "${name}"`)
+        .replace(/display = "[^"]*"/, `display = "${displayName}"`)
+        .replace(/launch = "[^"]*"/, `launch = "${launchPhrase}"`)
+        .replace(/prompt = "[^"]*"/, `prompt = "${launchPhrase}"`);
       writeFileSync(entryPath, source, 'utf8');
     }
   } else {

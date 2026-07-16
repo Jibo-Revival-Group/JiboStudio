@@ -1,7 +1,24 @@
-import { compileSkillProject, compileSkillSource, type CompileResult } from '@jibo-studio/skill-language';
-import { detectSkillSourceMode, getSkillEntryFile, readSkillPackageJson } from '@jibo-studio/skill-model-node';
+import {
+  claimLegacyProject,
+  compileSkillProject,
+  compileSkillSource,
+  migrateLegacyProjectToDsl,
+  type CompileResult,
+} from '@jibo-studio/skill-language';
+import {
+  detectSkillSourceMode,
+  getSkillEntryFile,
+  needsSourceChoice,
+  readSkillPackageJson,
+} from '@jibo-studio/skill-model-node';
 import { join } from 'path';
-import type { CompileSkillResult, ProjectModeInfo, SourceDiagnostic } from '../shared/types';
+import type {
+  CompileSkillResult,
+  MigrateSkillResult,
+  ProjectModeInfo,
+  SourceDiagnostic,
+  ToolchainResult,
+} from '../shared/types';
 
 export function getProjectModeInfo(projectPath: string): ProjectModeInfo {
   const pkg = readSkillPackageJson(projectPath);
@@ -11,6 +28,7 @@ export function getProjectModeInfo(projectPath: string): ProjectModeInfo {
     mode,
     entryFile: entry,
     displayName: pkg?.jibo?.['display-name'] ?? pkg?.name ?? null,
+    needsSourceChoice: needsSourceChoice(projectPath, pkg),
   };
 }
 
@@ -31,6 +49,47 @@ export function validateSkillFile(
     : filePath;
   const result = compileSkillSource(content, relative || 'skill.jibo');
   return result.diagnostics.map(toSourceDiagnostic);
+}
+
+export function keepProjectLegacy(projectPath: string): ToolchainResult {
+  try {
+    claimLegacyProject(projectPath);
+    return { success: true, code: 0, output: 'Kept legacy source format.' };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return { success: false, code: 1, output: message };
+  }
+}
+
+export function migrateProjectToDsl(projectPath: string): MigrateSkillResult {
+  try {
+    const result = migrateLegacyProjectToDsl(projectPath);
+    const compile = result.compile;
+    const errors = compile?.diagnostics.filter((d) => d.severity === 'error') ?? [];
+    const outputLines = [
+      `Wrote ${result.entryFile}`,
+      ...result.warnings.map((w) => `warning: ${w}`),
+      ...(compile
+        ? [
+            compile.success
+              ? `Compiled ${compile.artifacts.length} legacy artifact(s).`
+              : errors.map((d) => `line ${d.span.startLine}: ${d.message}`).join('\n'),
+          ]
+        : []),
+    ];
+    return {
+      success: result.success,
+      code: result.success ? 0 : 1,
+      output: outputLines.filter(Boolean).join('\n'),
+      entryFile: result.entryFile,
+      warnings: result.warnings,
+      diagnostics: compile?.diagnostics.map(toSourceDiagnostic),
+      artifacts: compile?.artifacts.map((a) => a.path),
+    };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return { success: false, code: 1, output: message, entryFile: 'skill.jibo', warnings: [] };
+  }
 }
 
 function toCompileResult(result: CompileResult): CompileSkillResult {

@@ -41,6 +41,7 @@ const KEYWORDS = new Set([
   'query',
   'eval',
   'animate',
+  'run',
   'end',
   'with',
   'say',

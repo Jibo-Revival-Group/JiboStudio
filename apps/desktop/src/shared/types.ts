@@ -64,6 +64,8 @@ export interface ProjectModeInfo {
   mode: SkillSourceMode;
   entryFile: string | null;
   displayName: string | null;
+  /** True when Studio has never recorded a source-format choice for this skill. */
+  needsSourceChoice: boolean;
 }
 
 export interface SourceDiagnostic {
@@ -81,6 +83,11 @@ export interface CompileSkillResult extends ToolchainResult {
   artifacts?: string[];
 }
 
+export interface MigrateSkillResult extends CompileSkillResult {
+  entryFile: string;
+  warnings: string[];
+}
+
 export interface JiboStudioAPI {
   openProject: () => Promise<string | null>;
   createProjectFolder: () => Promise<string | null>;
@@ -93,6 +100,8 @@ export interface JiboStudioAPI {
   createSkill: (options: CreateSkillOptions) => Promise<ToolchainResult>;
   compileSkill: (projectPath: string) => Promise<CompileSkillResult>;
   validateSkillSource: (projectPath: string, filePath: string, content: string) => Promise<SourceDiagnostic[]>;
+  keepProjectLegacy: (projectPath: string) => Promise<ToolchainResult>;
+  migrateProjectToDsl: (projectPath: string) => Promise<MigrateSkillResult>;
   toolchainBuild: (projectPath: string) => Promise<ToolchainResult>;
   toolchainWatch: (projectPath: string) => Promise<{ pid: number }>;
   toolchainStopWatch: () => Promise<void>;
